@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
  */
 abstract class RVHolder<T : Any>(
     inflater: LayoutInflater,
-    parent: ViewGroup,
+    parent: ViewGroup?,
     @LayoutRes layoutRes: Int
 ) : RecyclerView.ViewHolder(inflater.inflate(layoutRes, parent, false)) {
 

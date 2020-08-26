@@ -62,24 +62,20 @@ class RVAdapter<T : Any>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val item = items[tempPosition]
-        val holder = rvHolderFactory.onCreateViewHolder(inflater, parent, item)
+        val holder = rvHolderFactory.createViewHolder(inflater, parent, item)
 
-        var itemClicker: View.OnClickListener? = null
-        itemClickListener?.run {
-            itemClicker = View.OnClickListener {
-                onItemClick(holder, it, this)
-            }
-        }
-
-        var itemLongClicker: View.OnLongClickListener? = null
-        itemLongClickListener?.run {
-            itemLongClicker = View.OnLongClickListener {
-                onItemClick(holder, it, this)
-                true
-            }
-        }
-
-        holder.setListeners(itemClicker, itemLongClicker)
+        /**
+         * 设置点击/长按监听器，
+         * 如果外部没有传入点击/长按事件则设为 null
+         */
+        holder.setListeners(
+            itemClickListener?.run { View.OnClickListener { onItemClick(holder, it, this) } },
+            itemLongClickListener?.run {
+                View.OnLongClickListener {
+                    onItemClick(holder, it, this)
+                    true
+                }
+            })
 
         return holder
     }
@@ -97,9 +93,7 @@ class RVAdapter<T : Any>(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        holder as RVHolder<T>
-        val item = items[position]
-        holder.setContent(item, false)
+        bindRVHolder(holder, position, null)
     }
 
     override fun onBindViewHolder(
@@ -107,9 +101,17 @@ class RVAdapter<T : Any>(
         position: Int,
         payloads: MutableList<Any>
     ) {
+        bindRVHolder(holder, position, payloads)
+    }
+
+    private fun bindRVHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>?
+    ) {
         holder as RVHolder<T>
         val item = items[position]
-        if (payloads.isEmpty()) {
+        if (payloads.isNullOrEmpty()) {
             holder.setContent(item, false)
         } else {
             holder.setContent(item, false, payloads[0])

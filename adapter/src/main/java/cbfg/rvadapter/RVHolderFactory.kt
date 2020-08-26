@@ -20,7 +20,7 @@ abstract class RVHolderFactory {
     /**
      * 供 [RecyclerView.Adapter.onCreateViewHolder] 调用
      */
-    abstract fun onCreateViewHolder(
+    abstract fun createViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup?,
         item: Any
