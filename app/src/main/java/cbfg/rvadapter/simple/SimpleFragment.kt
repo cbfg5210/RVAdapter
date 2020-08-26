@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import cbfg.rvadapter.DataHelper
 import cbfg.rvadapter.R
 import cbfg.rvadapter.RVAdapter
+import cbfg.rvadapter.entity.Person
 import kotlinx.android.synthetic.main.fragment_list_common.*
 
 /**
@@ -17,6 +18,8 @@ import kotlinx.android.synthetic.main.fragment_list_common.*
  * 功能描述: 单 view type，点击、长按
  */
 class SimpleFragment : Fragment() {
+    private lateinit var adapter: RVAdapter<Person>
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,15 +30,33 @@ class SimpleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        RVAdapter<String>(view.context, TextVHFactory())
+        adapter = RVAdapter<Person>(view.context, SimpleVHFactory())
             .bindRecyclerView(rvList)
-            .setItems(DataHelper.getTextList())
-            .setItemClickListener { _, item, position ->
-                Toast.makeText(view.context, "click $item - $position", Toast.LENGTH_SHORT).show()
+            .setItems(DataHelper.getPeople())
+            .setItemClickListener { v, item, position ->
+                /**
+                 * 点击头像
+                 */
+                if (v.id == R.id.ivAvatar) {
+                    item.name = "${System.currentTimeMillis()}"
+                    adapter.notifyItemChanged(position, 1)
+                    return@setItemClickListener
+                }
+                /**
+                 * 点击 item
+                 */
+                Toast.makeText(
+                    view.context,
+                    "click item ${item.name} - $position",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             .setItemLongClickListener { _, item, position ->
-                Toast.makeText(view.context, "long click $item - $position", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(
+                    view.context,
+                    "long click ${item.name} - $position",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
     }
 }
