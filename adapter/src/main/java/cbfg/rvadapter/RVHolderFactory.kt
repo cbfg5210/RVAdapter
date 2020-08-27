@@ -25,5 +25,5 @@ abstract class RVHolderFactory {
         inflater: LayoutInflater,
         parent: ViewGroup?,
         item: Any
-    ): RVHolder<Any>
+    ): RVHolder<out Any>
 }

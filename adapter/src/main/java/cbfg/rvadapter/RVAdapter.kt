@@ -141,7 +141,7 @@ class RVAdapter<T : Any>(
     }
 
     private fun onItemClick(
-        holder: RVHolder<Any>,
+        holder: RVHolder<out Any>,
         view: View,
         clicker: ((view: View, item: T, position: Int) -> Unit)?
     ) {

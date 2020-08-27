@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import cbfg.rvadapter.demo.multi_view_type.MultiViewTypeFragment
 import cbfg.rvadapter.demo.simple.SimpleFragment
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         val fragment = when (menuItemId) {
             R.id.actionSimple -> SimpleFragment()
+            R.id.actionMultiViewType -> MultiViewTypeFragment()
             else -> return
         }
 
