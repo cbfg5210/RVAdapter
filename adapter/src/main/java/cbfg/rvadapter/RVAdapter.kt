@@ -20,6 +20,11 @@ class RVAdapter<T : Any>(
     private var itemClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
     private var itemLongClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
 
+    /**
+     * 如果需要处理 adapter 中的一些事件则传入此对象实例
+     */
+    private var lifecycleHandler: RVLifecycleHandler? = null
+
     private val items = ArrayList<T>()
 
     /**
@@ -39,6 +44,11 @@ class RVAdapter<T : Any>(
 
     fun setItemLongClickListener(listener: (view: View, item: T, position: Int) -> Unit): RVAdapter<T> {
         this.itemLongClickListener = listener
+        return this
+    }
+
+    fun setLifecycleHandler(lifecycleHandler: RVLifecycleHandler): RVAdapter<T> {
+        this.lifecycleHandler = lifecycleHandler
         return this
     }
 
@@ -116,5 +126,25 @@ class RVAdapter<T : Any>(
         } else {
             holder.setContent(item, false, payloads[0])
         }
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        lifecycleHandler?.onViewRecycled(holder)
+    }
+
+    override fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
+        lifecycleHandler?.run { return this.onFailedToRecycleView(holder) }
+        return super.onFailedToRecycleView(holder)
+    }
+
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        lifecycleHandler?.onViewAttachedToWindow(holder)
+    }
+
+    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        lifecycleHandler?.onViewDetachedFromWindow(holder)
     }
 }
