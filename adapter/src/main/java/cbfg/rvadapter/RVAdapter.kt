@@ -57,12 +57,12 @@ class RVAdapter<T : Any>(
         return this
     }
 
-    fun setItems(mItems: List<T>?): RVAdapter<T> {
-        this.items.clear()
-        if (mItems.isNullOrEmpty()) {
+    fun setItems(items: List<T>?): RVAdapter<T> {
+        clear()
+        if (items.isNullOrEmpty()) {
             return this
         }
-        this.items.addAll(mItems)
+        this.items.addAll(items)
         return this
     }
 
@@ -100,6 +100,10 @@ class RVAdapter<T : Any>(
 
     fun removeRange(fromIndex: Int, toIndex: Int) {
         items.subList(fromIndex, toIndex).clear()
+    }
+
+    fun clear() {
+        items.clear()
     }
 
     /**
