@@ -61,6 +61,42 @@ class RVAdapter<T : Any>(
         return this
     }
 
+    fun getItems(): List<T> {
+        return items
+    }
+
+    fun add(item: T): Boolean {
+        return items.add(item)
+    }
+
+    fun add(index: Int, item: T) {
+        items.add(index, item)
+    }
+
+    fun add(list: List<T>): Boolean {
+        return items.addAll(list)
+    }
+
+    fun add(index: Int, list: List<T>): Boolean {
+        return items.addAll(index, list)
+    }
+
+    fun remove(item: T): Boolean {
+        return items.remove(item)
+    }
+
+    fun removeAt(index: Int): T {
+        return items.removeAt(index)
+    }
+
+    fun remove(list: List<T>) {
+        list.forEach { items.remove(it) }
+    }
+
+    fun removeRange(fromIndex: Int, toIndex: Int) {
+        items.subList(fromIndex, toIndex).clear()
+    }
+
     override fun getItemViewType(position: Int): Int {
         tempPosition = position
         return rvHolderFactory.getItemViewType(items[position])
