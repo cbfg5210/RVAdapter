@@ -32,6 +32,11 @@ class RVAdapter<T : Any>(
      */
     private var tempPosition = 0
 
+    /**
+     * 保存 item 类型及对应的属性信息
+     */
+    private var itemInfoMap = HashMap<Class<*>, ItemInfo>()
+
     fun bindRecyclerView(rv: RecyclerView): RVAdapter<T> {
         rv.adapter = this
         return this
@@ -97,9 +102,18 @@ class RVAdapter<T : Any>(
         items.subList(fromIndex, toIndex).clear()
     }
 
+    /**
+     * 获取 item 信息，没有则创建保存
+     */
+    private fun getItemInfo(clazz: Class<*>): ItemInfo {
+        return itemInfoMap[clazz] ?: ItemInfo(itemInfoMap.size).also { itemInfoMap[clazz] = it }
+    }
+
     override fun getItemViewType(position: Int): Int {
         tempPosition = position
-        return rvHolderFactory.getItemViewType(items[position])
+        val item = items[position]
+        val viewType = rvHolderFactory.getItemViewType(item)
+        return if (viewType != -1) viewType else getItemInfo(item.javaClass).viewType
     }
 
     override fun getItemCount(): Int {
@@ -183,4 +197,13 @@ class RVAdapter<T : Any>(
         super.onViewDetachedFromWindow(holder)
         lifecycleHandler?.onViewDetachedFromWindow(holder)
     }
+
+    /**
+     * 存储 item 属性
+     */
+    private data class ItemInfo(
+        val viewType: Int = 0,
+        var selectable: Boolean = false,
+        var multiSelectable: Boolean = false
+    )
 }

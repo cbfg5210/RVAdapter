@@ -12,8 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class RVHolderFactory {
     /**
      * 供 [RecyclerView.Adapter.getItemViewType] 调用，
-     * 多 view type 的情况下需要覆写这个方法，
-     * 可以使用 item layout 作为 type 值
+     * 默认支持多 view type（默认会以数据类型区分），
+     * 如果默认的不满足需求，可以覆写这个方法，
+     * 建议使用 item layout 作为 type 值
      */
     open fun getItemViewType(item: Any) = -1
 
