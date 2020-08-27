@@ -1,4 +1,4 @@
-package cbfg.rvadapter.simple
+package cbfg.rvadapter.demo.simple
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

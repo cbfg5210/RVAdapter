@@ -1,4 +1,4 @@
-package cbfg.rvadapter.simple
+package cbfg.rvadapter.demo.simple
 
 import android.os.Bundle
 import android.view.LayoutInflater
