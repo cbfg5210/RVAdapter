@@ -151,24 +151,19 @@ class RVAdapter<T : Any>(
         return this
     }
 
-    fun getItems(): List<T> {
-        return items
-    }
+    fun getItems(): List<T> = items
 
     fun add(item: T) {
-        items.add(item)
-        notifyItemRangeInserted(items.size - 1, 1)
+        add(items.size, item)
     }
 
     fun add(index: Int, item: T) {
         items.add(index, item)
-        notifyItemRangeInserted(index, 1)
+        notifyItemInserted(index)
     }
 
     fun add(list: List<T>) {
-        val size = list.size
-        items.addAll(list)
-        notifyItemRangeInserted(size, list.size)
+        add(list.size, list)
     }
 
     fun add(index: Int, list: List<T>) {
@@ -176,12 +171,11 @@ class RVAdapter<T : Any>(
         notifyItemRangeInserted(index, list.size)
     }
 
-    fun remove(vararg list: T) {
-        if (list.isNotEmpty()) {
-            items.removeAll(list)
-            selections.removeAll(list)
-            notifyDataSetChanged()
-        }
+    fun remove(item: T) {
+        val index = items.indexOf(item)
+        items.remove(item)
+        selections.remove(item)
+        notifyItemRemoved(index)
     }
 
     fun removeAt(index: Int) {
@@ -190,7 +184,7 @@ class RVAdapter<T : Any>(
         notifyItemRemoved(index)
     }
 
-    fun remove(list: List<T>) {
+    fun remove(list: Collection<T>) {
         if (list.isNotEmpty()) {
             items.removeAll(list)
             selections.removeAll(list)
@@ -223,18 +217,17 @@ class RVAdapter<T : Any>(
 
     fun getSelections(): Set<T> = selections
 
-    fun select(list: List<T>) {
+    fun select(list: Collection<T>) {
         if (list.isNotEmpty()) {
             selections.addAll(list)
             notifyItemRangeChanged(0, items.size, FLAG_SELECTED)
         }
     }
 
-    fun select(vararg list: T) {
-        if (list.isNotEmpty()) {
-            selections.addAll(list)
-            notifyItemRangeChanged(0, items.size, FLAG_SELECTED)
-        }
+    fun select(item: T) {
+        val index = items.indexOf(item)
+        selections.add(item)
+        notifyItemChanged(index, FLAG_SELECTED)
     }
 
     fun selectAt(index: Int) {
@@ -276,14 +269,15 @@ class RVAdapter<T : Any>(
         notifyItemChanged(index, FLAG_DESELECTED)
     }
 
-    fun deselect(vararg list: T) {
+    fun deselect(item: T) {
         if (selections.isNotEmpty()) {
-            selections.removeAll(list)
-            notifyItemRangeChanged(0, items.size, FLAG_DESELECTED)
+            val index = items.indexOf(item)
+            selections.remove(item)
+            notifyItemChanged(index, FLAG_DESELECTED)
         }
     }
 
-    fun deselect(list: List<T>) {
+    fun deselect(list: Collection<T>) {
         if (selections.isNotEmpty()) {
             selections.removeAll(list)
             notifyItemRangeChanged(0, items.size, FLAG_DESELECTED)
