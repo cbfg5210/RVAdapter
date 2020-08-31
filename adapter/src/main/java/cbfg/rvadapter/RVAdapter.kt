@@ -26,6 +26,12 @@ class RVAdapter<T : Any>(
     private var lifecycleHandler: RVLifecycleHandler? = null
 
     private val items = ArrayList<T>()
+    private val selections = HashSet<T>()
+
+    /**
+     * 是否可选总开关
+     */
+    private var selectable = false
 
     /**
      * 临时变量，用于记录当前 [getItemViewType] 的位置
@@ -57,12 +63,94 @@ class RVAdapter<T : Any>(
         return this
     }
 
-    fun setItems(items: List<T>?): RVAdapter<T> {
-        clear()
-        if (items.isNullOrEmpty()) {
-            return this
+    /**
+     * 是否可选总开关
+     */
+    fun setSelectable(
+        selectable: Boolean,
+        clearSelections: Boolean = true
+    ) {
+        this.selectable = selectable
+        if (clearSelections) {
+            deselectAll()
         }
-        this.items.addAll(items)
+    }
+
+    /**
+     * 某数据类型 item 是否可选开关
+     * @param clearItsSelections true：清空该数据类型的选中项
+     * @param needNotify true：刷新
+     */
+    fun setSelectable(
+        clazz: Class<*>,
+        strategy: SelectStrategy,
+        clearItsSelections: Boolean = true,
+        needNotify: Boolean = false
+    ) {
+        /**
+         * 更新 item 可选状态
+         */
+        val itemSelectable: Boolean
+        val itemMultiSelectable: Boolean
+        when (strategy) {
+            SelectStrategy.UNSELECTABLE -> {
+                itemSelectable = false
+                itemMultiSelectable = false
+            }
+            SelectStrategy.SINGLE_SELECTABLE -> {
+                itemSelectable = true
+                itemMultiSelectable = false
+            }
+            SelectStrategy.MULTI_SELECTABLE -> {
+                itemSelectable = true
+                itemMultiSelectable = true
+            }
+        }
+        getItemInfo(clazz).apply {
+            this.selectable = itemSelectable
+            this.multiSelectable = itemMultiSelectable
+        }
+        /**
+         * 更新可选总开关
+         */
+        var canSelect = false
+        for ((_, itemInfo) in itemInfoMap) {
+            if (itemInfo.selectable) {
+                canSelect = true
+                break
+            }
+        }
+        this.selectable = canSelect
+        /**
+         * 是否移除指定类型 item 选中项
+         * 是否刷新数据
+         */
+        if (items.isNotEmpty()) {
+            if (clearItsSelections) {
+                deselect(clazz, false)
+            }
+            if (needNotify) {
+                notifyItemRangeChanged(0, items.size, FLAG_DESELECTED)
+            }
+        }
+    }
+
+    /**
+     * @param keepSelections false：清空选中项
+     * @param needNotify true：刷新
+     */
+    fun setItems(
+        items: List<T>?,
+        keepSelections: Boolean = false,
+        needNotify: Boolean = true
+    ): RVAdapter<T> {
+        clear(keepSelections, needNotify = false)
+        if (!items.isNullOrEmpty()) {
+            this.items.addAll(items)
+        }
+        if (needNotify) {
+            notifyDataSetChanged()
+        }
         return this
     }
 
@@ -70,40 +158,154 @@ class RVAdapter<T : Any>(
         return items
     }
 
-    fun add(item: T): Boolean {
-        return items.add(item)
+    fun add(item: T) {
+        items.add(item)
+        notifyItemRangeInserted(items.size - 1, 1)
     }
 
     fun add(index: Int, item: T) {
         items.add(index, item)
+        notifyItemRangeInserted(index, 1)
     }
 
-    fun add(list: List<T>): Boolean {
-        return items.addAll(list)
+    fun add(list: List<T>) {
+        val size = list.size
+        items.addAll(list)
+        notifyItemRangeInserted(size, list.size)
     }
 
-    fun add(index: Int, list: List<T>): Boolean {
-        return items.addAll(index, list)
+    fun add(index: Int, list: List<T>) {
+        items.addAll(index, list)
+        notifyItemRangeInserted(index, list.size)
     }
 
-    fun remove(item: T): Boolean {
-        return items.remove(item)
+    fun remove(vararg list: T) {
+        if (list.isNotEmpty()) {
+            items.removeAll(list)
+            selections.removeAll(list)
+            notifyDataSetChanged()
+        }
     }
 
-    fun removeAt(index: Int): T {
-        return items.removeAt(index)
+    fun removeAt(index: Int) {
+        val item = items.removeAt(index)
+        selections.remove(item)
+        notifyItemRemoved(index)
     }
 
     fun remove(list: List<T>) {
-        list.forEach { items.remove(it) }
+        if (list.isNotEmpty()) {
+            items.removeAll(list)
+            selections.removeAll(list)
+            notifyDataSetChanged()
+        }
     }
 
     fun removeRange(fromIndex: Int, toIndex: Int) {
-        items.subList(fromIndex, toIndex).clear()
+        val list = items.subList(fromIndex, toIndex)
+        if (list.isNotEmpty()) {
+            selections.removeAll(list)
+            list.clear()
+            notifyItemRangeRemoved(fromIndex, toIndex - fromIndex)
+        }
     }
 
-    fun clear() {
+    /**
+     * @param keepSelections false：清空选中项
+     * @param needNotify true：刷新
+     */
+    fun clear(keepSelections: Boolean = false, needNotify: Boolean = true) {
         items.clear()
+        if (!keepSelections) {
+            selections.clear()
+        }
+        if (needNotify) {
+            notifyDataSetChanged()
+        }
+    }
+
+    fun getSelections(): Set<T> = selections
+
+    fun select(list: List<T>) {
+        if (list.isNotEmpty()) {
+            selections.addAll(list)
+            notifyItemRangeChanged(0, items.size, FLAG_SELECTED)
+        }
+    }
+
+    fun select(vararg list: T) {
+        if (list.isNotEmpty()) {
+            selections.addAll(list)
+            notifyItemRangeChanged(0, items.size, FLAG_SELECTED)
+        }
+    }
+
+    fun selectAt(index: Int) {
+        selections.add(items[index])
+        notifyItemChanged(index, FLAG_SELECTED)
+    }
+
+    fun selectRange(fromIndex: Int, toIndex: Int) {
+        val subList = items.subList(fromIndex, toIndex)
+        if (subList.isNotEmpty()) {
+            select(subList)
+            notifyItemRangeChanged(fromIndex, toIndex - fromIndex, FLAG_SELECTED)
+        }
+    }
+
+    /**
+     * 选中指定类型 item 所有数据
+     * @param needNotify true：刷新
+     */
+    fun select(clazz: Class<*>, needNotify: Boolean = true) {
+        if (items.isNotEmpty()) {
+            items.forEach {
+                if (it.javaClass == clazz) {
+                    selections.add(it)
+                }
+            }
+            if (needNotify) {
+                notifyItemRangeChanged(0, items.size, FLAG_SELECTED)
+            }
+        }
+    }
+
+    fun selectAll() {
+        select(items)
+    }
+
+    fun deselect(vararg list: T) {
+        if (selections.isNotEmpty()) {
+            selections.removeAll(list)
+            notifyItemRangeChanged(0, items.size, FLAG_DESELECTED)
+        }
+    }
+
+    fun deselect(list: List<T>) {
+        if (selections.isNotEmpty()) {
+            selections.removeAll(list)
+            notifyItemRangeChanged(0, items.size, FLAG_DESELECTED)
+        }
+    }
+
+    /**
+     * 取消选中指定类型 item 所有数据
+     * @param needNotify true：刷新
+     */
+    fun deselect(clazz: Class<*>, needNotify: Boolean = true) {
+        if (items.isNotEmpty()) {
+            selections.removeAll(items.filterIsInstance(clazz))
+            if (needNotify) {
+                notifyItemRangeChanged(0, items.size, FLAG_DESELECTED)
+            }
+        }
+    }
+
+    fun deselectAll() {
+        if (selections.isNotEmpty()) {
+            selections.clear()
+            notifyItemRangeChanged(0, items.size, FLAG_DESELECTED)
+        }
     }
 
     /**
@@ -210,4 +412,11 @@ class RVAdapter<T : Any>(
         var selectable: Boolean = false,
         var multiSelectable: Boolean = false
     )
+
+    companion object {
+        const val FLAG_SELECTED = 10101
+        const val FLAG_DESELECTED = 10102
+        const val FLAG_SELECTABLE = 10103
+        const val FLAG_UNSELECTABLE = 10104
+    }
 }
