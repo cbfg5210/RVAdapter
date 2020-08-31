@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
  * 功能描述:
  */
 class RVAdapter<T : Any>(
-    private val context: Context,
+    context: Context,
     private val rvHolderFactory: RVHolderFactory
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
