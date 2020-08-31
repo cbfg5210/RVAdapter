@@ -65,14 +65,24 @@ class RVAdapter<T : Any>(
 
     /**
      * 是否可选总开关
+     * @param clearSelections 是否清空所有选中项
+     * @param needNotify true：刷新
      */
     fun setSelectable(
         selectable: Boolean,
-        clearSelections: Boolean = true
+        clearSelections: Boolean = true,
+        needNotify: Boolean = true
     ) {
         this.selectable = selectable
-        if (clearSelections) {
-            deselectAll()
+        if (clearSelections && selections.isNotEmpty()) {
+            selections.clear()
+            if (needNotify) {
+                notifyItemRangeChanged(
+                    0,
+                    items.size,
+                    if (selectable) FLAG_SELECTABLE else FLAG_UNSELECTABLE
+                )
+            }
         }
     }
 
@@ -85,30 +95,19 @@ class RVAdapter<T : Any>(
         clazz: Class<*>,
         strategy: SelectStrategy,
         clearItsSelections: Boolean = true,
-        needNotify: Boolean = false
+        needNotify: Boolean = true
     ) {
         /**
          * 更新 item 可选状态
          */
-        val itemSelectable: Boolean
-        val itemMultiSelectable: Boolean
-        when (strategy) {
-            SelectStrategy.UNSELECTABLE -> {
-                itemSelectable = false
-                itemMultiSelectable = false
+        getItemInfo(clazz).run {
+            if (strategy == SelectStrategy.UNSELECTABLE) {
+                this.selectable = false
+                this.multiSelectable = false
+            } else {
+                this.selectable = true
+                this.multiSelectable = strategy == SelectStrategy.MULTI_SELECTABLE
             }
-            SelectStrategy.SINGLE_SELECTABLE -> {
-                itemSelectable = true
-                itemMultiSelectable = false
-            }
-            SelectStrategy.MULTI_SELECTABLE -> {
-                itemSelectable = true
-                itemMultiSelectable = true
-            }
-        }
-        getItemInfo(clazz).apply {
-            this.selectable = itemSelectable
-            this.multiSelectable = itemMultiSelectable
         }
         /**
          * 更新可选总开关
@@ -125,13 +124,11 @@ class RVAdapter<T : Any>(
          * 是否移除指定类型 item 选中项
          * 是否刷新数据
          */
-        if (items.isNotEmpty()) {
-            if (clearItsSelections) {
-                deselect(clazz, false)
-            }
-            if (needNotify) {
-                notifyItemRangeChanged(0, items.size, FLAG_DESELECTED)
-            }
+        if (clearItsSelections) {
+            deselect(clazz, false)
+        }
+        if (needNotify && items.isNotEmpty()) {
+            notifyItemRangeChanged(0, items.size, ItemEvent(clazz, strategy))
         }
     }
 
@@ -274,6 +271,11 @@ class RVAdapter<T : Any>(
         select(items)
     }
 
+    fun deselectAt(index: Int) {
+        selections.remove(items[index])
+        notifyItemChanged(index, FLAG_DESELECTED)
+    }
+
     fun deselect(vararg list: T) {
         if (selections.isNotEmpty()) {
             selections.removeAll(list)
@@ -329,20 +331,13 @@ class RVAdapter<T : Any>(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val item = items[tempPosition]
         val holder = rvHolderFactory.createViewHolder(inflater, parent, item)
-
-        /**
-         * 设置点击/长按监听器，
-         * 如果外部没有传入点击/长按事件则设为 null
-         */
         holder.setListeners(
-            itemClickListener?.run { View.OnClickListener { onItemClick(holder, it, this) } },
-            itemLongClickListener?.run {
-                View.OnLongClickListener {
-                    onItemClick(holder, it, this)
-                    true
-                }
-            })
-
+            View.OnClickListener { onItemClick(holder, it, itemClickListener) },
+            View.OnLongClickListener {
+                onItemClick(holder, it, itemLongClickListener)
+                true
+            }
+        )
         return holder
     }
 
@@ -355,7 +350,52 @@ class RVAdapter<T : Any>(
         if (position < 0 || position >= items.size) {
             return
         }
-        clicker?.invoke(view, items[position], position)
+        val item = items[position]
+        checkUpdateSelectionState(item, position)
+        clicker?.invoke(view, item, position)
+    }
+
+    /**
+     * 更新选中项状态
+     */
+    private fun checkUpdateSelectionState(item: T, index: Int) {
+        if (!selectable) {
+            return
+        }
+        val itemInfo = getItemInfo(item.javaClass)
+        /**
+         * 不可选的话不用往下处理
+         */
+        if (!itemInfo.selectable) {
+            return
+        }
+        /**
+         * 多选情况
+         * 如果已经选中则移除选中，否则选中
+         */
+        if (itemInfo.multiSelectable) {
+            if (selections.contains(item)) {
+                deselectAt(index)
+            } else {
+                selectAt(index)
+            }
+            return
+        }
+        /**
+         * 单选情况-已经选中该项的话不用往下处理
+         * 单选情况-没有选中该项的情况下，先移除前面选中的，再添加到选中列表
+         */
+        if (!selections.contains(item)) {
+            selections.firstOrNull { it.javaClass == item.javaClass }?.run {
+                selections.remove(this)
+                val itemIndex = items.indexOf(this)
+                if (itemIndex != -1) {
+                    notifyItemChanged(index, FLAG_DESELECTED)
+                }
+            }
+            selections.add(item)
+            notifyItemChanged(index, FLAG_SELECTED)
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
