@@ -74,15 +74,15 @@ class RVAdapter<T : Any>(
         needNotify: Boolean = true
     ) {
         this.selectable = selectable
-        if (clearSelections && selections.isNotEmpty()) {
+        if (clearSelections) {
             selections.clear()
-            if (needNotify) {
-                notifyItemRangeChanged(
-                    0,
-                    items.size,
-                    if (selectable) FLAG_SELECTABLE else FLAG_UNSELECTABLE
-                )
-            }
+        }
+        if (needNotify && selections.isNotEmpty()) {
+            notifyItemRangeChanged(
+                0,
+                items.size,
+                if (selectable) FLAG_SELECTABLE else FLAG_UNSELECTABLE
+            )
         }
     }
 
@@ -133,15 +133,15 @@ class RVAdapter<T : Any>(
     }
 
     /**
-     * @param keepSelections false：清空选中项
+     * @param clearSelections true：清空选中项
      * @param needNotify true：刷新
      */
     fun setItems(
         items: List<T>?,
-        keepSelections: Boolean = false,
+        clearSelections: Boolean = true,
         needNotify: Boolean = true
     ): RVAdapter<T> {
-        clear(keepSelections, needNotify = false)
+        clear(clearSelections, needNotify = false)
         if (!items.isNullOrEmpty()) {
             this.items.addAll(items)
         }
@@ -208,12 +208,12 @@ class RVAdapter<T : Any>(
     }
 
     /**
-     * @param keepSelections false：清空选中项
+     * @param alsoSelections true：清空选中项
      * @param needNotify true：刷新
      */
-    fun clear(keepSelections: Boolean = false, needNotify: Boolean = true) {
+    fun clear(alsoSelections: Boolean = true, needNotify: Boolean = true) {
         items.clear()
-        if (!keepSelections) {
+        if (alsoSelections) {
             selections.clear()
         }
         if (needNotify) {
