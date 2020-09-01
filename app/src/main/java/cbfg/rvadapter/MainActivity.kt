@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.demo.multi_view_type.MultiViewTypeFragment
+import cbfg.rvadapter.demo.select_complex.ComplexFragment
 import cbfg.rvadapter.demo.select_multi.MultiSelectFragment
 import cbfg.rvadapter.demo.select_single.SingleSelectFragment
 import cbfg.rvadapter.demo.simple.SimpleFragment
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
             R.id.actionMultiViewType -> MultiViewTypeFragment()
             R.id.actionSingleSelect -> SingleSelectFragment()
             R.id.actionMultiSelect -> MultiSelectFragment()
+            R.id.actionComplexSelect -> ComplexFragment()
             else -> return
         }
 
