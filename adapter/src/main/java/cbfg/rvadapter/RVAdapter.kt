@@ -80,7 +80,7 @@ class RVAdapter<T : Any>(
         selectable: Boolean,
         clearSelections: Boolean = true,
         needNotify: Boolean = true
-    ) {
+    ): RVAdapter<T> {
         this.selectable = selectable
         if (clearSelections) {
             selections.clear()
@@ -92,6 +92,7 @@ class RVAdapter<T : Any>(
                 if (selectable) FLAG_SELECTABLE else FLAG_UNSELECTABLE
             )
         }
+        return this
     }
 
     /**
@@ -104,7 +105,7 @@ class RVAdapter<T : Any>(
         strategy: SelectStrategy,
         clearItsSelections: Boolean = true,
         needNotify: Boolean = true
-    ) {
+    ): RVAdapter<T> {
         /**
          * 更新 item 可选状态
          */
@@ -138,6 +139,7 @@ class RVAdapter<T : Any>(
         if (needNotify) {
             notifyItemRangeChanged(0, items.size, ItemEvent(clazz, strategy))
         }
+        return this
     }
 
     /**
@@ -393,9 +395,9 @@ class RVAdapter<T : Any>(
         if (!selections.contains(item)) {
             selections.firstOrNull { it.javaClass == item.javaClass }?.run {
                 selections.remove(this)
-                val itemIndex = items.indexOf(this)
-                if (itemIndex != -1) {
-                    notifyItemChanged(index, FLAG_DESELECTED)
+                val preIndex = items.indexOf(this)
+                if (preIndex != -1) {
+                    notifyItemChanged(preIndex, FLAG_DESELECTED)
                 }
             }
             selections.add(item)
@@ -422,10 +424,11 @@ class RVAdapter<T : Any>(
     ) {
         holder as RVHolder<T>
         val item = items[position]
+        val isSelected = isSelectable(item.javaClass) && selections.contains(item)
         if (payloads.isNullOrEmpty()) {
-            holder.setContent(item, false)
+            holder.setContent(item, isSelected)
         } else {
-            holder.setContent(item, false, payloads[0])
+            holder.setContent(item, isSelected, payloads[0])
         }
     }
 

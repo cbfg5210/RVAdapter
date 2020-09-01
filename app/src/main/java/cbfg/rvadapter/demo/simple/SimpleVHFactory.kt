@@ -21,8 +21,8 @@ class SimpleVHFactory : RVHolderFactory() {
         inflater: LayoutInflater,
         parent: ViewGroup?,
         item: Any
-    ): RVHolder<Any> {
-        return PersonVH(inflater, parent) as RVHolder<Any>
+    ): RVHolder<out Any> {
+        return PersonVH(inflater, parent)
     }
 
     private class PersonVH(
