@@ -21,4 +21,7 @@
     <item
         android:id="@+id/actionComplexSelect"
         android:title="Select - complex" />
+    <item
+        android:id="@+id/actionLifecycle"
+        android:title="Select - lifecycle" />
 </menu>

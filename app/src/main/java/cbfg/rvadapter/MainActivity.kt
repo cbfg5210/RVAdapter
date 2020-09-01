@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import cbfg.rvadapter.demo.R
+import cbfg.rvadapter.demo.lifecycle.LifecycleFragment
 import cbfg.rvadapter.demo.multi_view_type.MultiViewTypeFragment
 import cbfg.rvadapter.demo.select_complex.ComplexFragment
 import cbfg.rvadapter.demo.select_mix.MixSelectFragment
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
             R.id.actionMultiSelect -> MultiSelectFragment()
             R.id.actionMixSelect -> MixSelectFragment()
             R.id.actionComplexSelect -> ComplexFragment()
+            R.id.actionLifecycle -> LifecycleFragment()
             else -> return
         }
 
