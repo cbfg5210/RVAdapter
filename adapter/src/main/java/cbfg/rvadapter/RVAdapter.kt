@@ -425,6 +425,7 @@ class RVAdapter<T : Any>(
         holder as RVHolder<T>
         val item = items[position]
         val isSelected = isSelectable(item.javaClass) && selections.contains(item)
+        //Log.e("*****", "payloads = $payloads,position = $position")
         if (payloads.isNullOrEmpty()) {
             holder.setContent(item, isSelected)
         } else {

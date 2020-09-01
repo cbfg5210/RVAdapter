@@ -32,7 +32,7 @@ class SingleSelectVHFactory : RVHolderFactory() {
         RVHolder<RankItem>(inflater, parent, R.layout.item_select_single) {
 
         override fun setContent(item: RankItem, isSelected: Boolean, payload: Any?) {
-            Log.e("*****", "payload = $payload")
+            //Log.e("*****", "payload = $payload")
             itemView.rbSelect.isChecked = isSelected
             if (payload == null) {
                 itemView.ivIcon.setImageResource(R.mipmap.ic_launcher)
