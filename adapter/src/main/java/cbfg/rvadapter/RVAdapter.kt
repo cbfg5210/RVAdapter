@@ -63,6 +63,10 @@ class RVAdapter<T : Any>(
         return this
     }
 
+    fun getItems(): List<T> = items
+
+    fun getSelections(): Set<T> = selections
+
     /**
      * 是否可选总开关
      * @param clearSelections 是否清空所有选中项
@@ -77,7 +81,7 @@ class RVAdapter<T : Any>(
         if (clearSelections) {
             selections.clear()
         }
-        if (needNotify && selections.isNotEmpty()) {
+        if (needNotify) {
             notifyItemRangeChanged(
                 0,
                 items.size,
@@ -127,7 +131,7 @@ class RVAdapter<T : Any>(
         if (clearItsSelections) {
             deselect(clazz, false)
         }
-        if (needNotify && items.isNotEmpty()) {
+        if (needNotify) {
             notifyItemRangeChanged(0, items.size, ItemEvent(clazz, strategy))
         }
     }
@@ -151,8 +155,6 @@ class RVAdapter<T : Any>(
         return this
     }
 
-    fun getItems(): List<T> = items
-
     fun add(item: T) {
         add(items.size, item)
     }
@@ -172,15 +174,16 @@ class RVAdapter<T : Any>(
     }
 
     fun remove(item: T) {
-        val index = items.indexOf(item)
-        items.remove(item)
         selections.remove(item)
-        notifyItemRemoved(index)
+        val index = items.indexOf(item)
+        if (index != -1) {
+            items.remove(item)
+            notifyItemRemoved(index)
+        }
     }
 
     fun removeAt(index: Int) {
-        val item = items.removeAt(index)
-        selections.remove(item)
+        selections.remove(items.removeAt(index))
         notifyItemRemoved(index)
     }
 
@@ -215,8 +218,6 @@ class RVAdapter<T : Any>(
         }
     }
 
-    fun getSelections(): Set<T> = selections
-
     fun select(list: Collection<T>) {
         if (list.isNotEmpty()) {
             selections.addAll(list)
@@ -225,9 +226,11 @@ class RVAdapter<T : Any>(
     }
 
     fun select(item: T) {
-        val index = items.indexOf(item)
         selections.add(item)
-        notifyItemChanged(index, FLAG_SELECTED)
+        val index = items.indexOf(item)
+        if (index != -1) {
+            notifyItemChanged(index, FLAG_SELECTED)
+        }
     }
 
     fun selectAt(index: Int) {
@@ -238,7 +241,7 @@ class RVAdapter<T : Any>(
     fun selectRange(fromIndex: Int, toIndex: Int) {
         val subList = items.subList(fromIndex, toIndex)
         if (subList.isNotEmpty()) {
-            select(subList)
+            selections.addAll(subList)
             notifyItemRangeChanged(fromIndex, toIndex - fromIndex, FLAG_SELECTED)
         }
     }
@@ -270,9 +273,9 @@ class RVAdapter<T : Any>(
     }
 
     fun deselect(item: T) {
-        if (selections.isNotEmpty()) {
-            val index = items.indexOf(item)
-            selections.remove(item)
+        selections.remove(item)
+        val index = items.indexOf(item)
+        if (index != -1) {
             notifyItemChanged(index, FLAG_DESELECTED)
         }
     }
@@ -289,8 +292,8 @@ class RVAdapter<T : Any>(
      * @param needNotify true：刷新
      */
     fun deselect(clazz: Class<*>, needNotify: Boolean = true) {
-        if (items.isNotEmpty()) {
-            selections.removeAll(items.filterIsInstance(clazz))
+        if (selections.isNotEmpty()) {
+            selections.removeAll(selections.filterIsInstance(clazz))
             if (needNotify) {
                 notifyItemRangeChanged(0, items.size, FLAG_DESELECTED)
             }
