@@ -1,29 +1,21 @@
 package cbfg.rvadapter.demo.select_single
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cbfg.rvadapter.RVAdapter
 import cbfg.rvadapter.SelectStrategy
 import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.entity.RankItem
-import kotlinx.android.synthetic.main.fragment_list_select_single.view.*
+import kotlinx.android.synthetic.main.fragment_list_select_single.*
 
-class SingleSelectFragment : Fragment() {
-    private lateinit var layout: View
+class SingleSelectFragment : Fragment(R.layout.fragment_list_select_single) {
     private lateinit var adapter: RVAdapter<RankItem>
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        layout = inflater.inflate(R.layout.fragment_list_select_single, container, false)
-
-        adapter = RVAdapter<RankItem>(layout.context, SingleSelectVHFactory())
-            .bindRecyclerView(layout.rvTest)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        adapter = RVAdapter<RankItem>(view.context, SingleSelectVHFactory())
+            .bindRecyclerView(rvTest)
             //设置指定类型数据可选
             .setSelectable(
                 RankItem::class.java,
@@ -39,12 +31,10 @@ class SingleSelectFragment : Fragment() {
             }
 
         showSelectedItem()
-
-        return layout
     }
 
     private fun showSelectedItem() {
-        layout.tvSelections.text = "选中的项: ${adapter.getSelections()}"
+        tvSelections.text = "选中的项: ${adapter.getSelections()}"
     }
 
     private fun getItems(): List<RankItem> {

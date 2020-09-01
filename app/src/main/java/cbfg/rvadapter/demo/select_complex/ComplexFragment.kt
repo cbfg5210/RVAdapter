@@ -1,9 +1,7 @@
 package cbfg.rvadapter.demo.select_complex
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cbfg.rvadapter.RVAdapter
 import cbfg.rvadapter.SelectStrategy
@@ -12,16 +10,8 @@ import cbfg.rvadapter.entity.CommodityItem
 import cbfg.rvadapter.entity.ShopItem
 import kotlinx.android.synthetic.main.fragment_complex.*
 
-class ComplexFragment : Fragment() {
+class ComplexFragment : Fragment(R.layout.fragment_complex) {
     private lateinit var adapter: RVAdapter<Any>
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_complex, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

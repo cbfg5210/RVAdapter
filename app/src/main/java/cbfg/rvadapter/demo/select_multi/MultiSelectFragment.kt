@@ -1,9 +1,7 @@
 package cbfg.rvadapter.demo.select_multi
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cbfg.rvadapter.RVAdapter
 import cbfg.rvadapter.SelectStrategy
@@ -11,16 +9,8 @@ import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.entity.RankItem
 import kotlinx.android.synthetic.main.fragment_list_select_multi.*
 
-class MultiSelectFragment : Fragment() {
+class MultiSelectFragment : Fragment(R.layout.fragment_list_select_multi) {
     private lateinit var adapter: RVAdapter<RankItem>
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_list_select_multi, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
