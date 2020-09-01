@@ -224,15 +224,6 @@ class RVAdapter<T : Any>(
         }
     }
 
-    fun select(list: Collection<T>) {
-        if (list.isNotEmpty()) {
-            //这里只判断第一项数据的类型是否可以选中
-            require(isSelectable(list.first().javaClass)) { TIP_SELECT_DISABLED }
-            selections.addAll(list)
-            notifyItemRangeChanged(0, items.size, FLAG_SELECTED)
-        }
-    }
-
     fun select(item: T) {
         select(item, items.indexOf(item))
     }
@@ -266,36 +257,79 @@ class RVAdapter<T : Any>(
         }
     }
 
-    fun selectRange(fromIndex: Int, toIndex: Int) {
-        val subList = items.subList(fromIndex, toIndex)
-        if (subList.isNotEmpty()) {
-            //这里只判断第一项数据的类型是否可以选中
-            require(isSelectable(subList[0].javaClass)) { TIP_SELECT_DISABLED }
-            selections.addAll(subList)
-            notifyItemRangeChanged(fromIndex, toIndex - fromIndex, FLAG_SELECTED)
+    /**
+     * @param strictCheck true：严格检查数据类型是否单选，如果单选并且选中多项则抛出异常
+     */
+    fun select(list: Collection<T>, strictCheck: Boolean = false) {
+        selectList(list, strictCheck)
+        notifyItemRangeChanged(0, items.size, FLAG_SELECTED)
+    }
+
+    /**
+     * @param strictCheck true：严格检查数据类型是否单选，如果单选并且选中多项则抛出异常
+     */
+    fun selectRange(fromIndex: Int, toIndex: Int, strictCheck: Boolean = false) {
+        selectList(items.subList(fromIndex, toIndex), strictCheck)
+        notifyItemRangeChanged(fromIndex, toIndex - fromIndex, FLAG_SELECTED)
+    }
+
+    /**
+     * 多项选择
+     * @param strictCheck true：严格检查是否违反单选原则，false：只检查第一项数据类型是否违反单选原则
+     */
+    private fun selectList(list: Collection<T>, strictCheck: Boolean = false) {
+        if (list.isEmpty()) {
+            return
+        }
+        if (strictCheck) {
+            val mapList = list.groupBy { it.javaClass }
+            for ((clazz, mList) in mapList) {
+                require(isSelectable(clazz)) { TIP_SELECT_DISABLED }
+                if (!getItemInfo(clazz).multiSelectable && mList.size > 1) {
+                    throw RuntimeException("'$clazz' 类型数据只能单选，不可以多选！")
+                }
+                if (mList.size == 1) {
+                    select(mList[0])
+                } else {
+                    selections.addAll(mList)
+                }
+            }
+        } else {
+            val firstItem = list.first()
+            require(isSelectable(firstItem.javaClass)) { TIP_SELECT_DISABLED }
+            if (!getItemInfo(firstItem.javaClass).multiSelectable && list.size > 1) {
+                throw RuntimeException("'${firstItem.javaClass}' 类型数据只能单选，不可以多选！")
+            }
+            if (list.size == 1) {
+                select(firstItem)
+            } else {
+                selections.addAll(list)
+            }
         }
     }
 
     /**
-     * 选中指定类型 item 所有数据
-     * @param needNotify true：刷新
+     * 选中指定类型 item 所有数据，类型是单选的话只能选中一项
      */
-    fun select(clazz: Class<*>, needNotify: Boolean = true) {
+    fun select(clazz: Class<*>) {
+        if (items.isEmpty()) {
+            return
+        }
         require(isSelectable(clazz)) { TIP_SELECT_DISABLED }
-        if (items.isNotEmpty()) {
+        if (!getItemInfo(clazz).multiSelectable) {
+            items.firstOrNull { it.javaClass == clazz }?.run { select(this) }
+        } else {
             items.forEach {
                 if (it.javaClass == clazz) {
                     selections.add(it)
                 }
             }
-            if (needNotify) {
-                notifyItemRangeChanged(0, items.size, FLAG_SELECTED)
-            }
+            notifyItemRangeChanged(0, items.size, FLAG_SELECTED)
         }
     }
 
-    fun selectAll() {
-        select(items)
+    fun selectAll(strictCheck: Boolean = false) {
+        select(items, strictCheck)
     }
 
     fun deselectAt(index: Int) {
