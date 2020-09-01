@@ -234,19 +234,36 @@ class RVAdapter<T : Any>(
     }
 
     fun select(item: T) {
-        require(isSelectable(item.javaClass)) { TIP_SELECT_DISABLED }
-        selections.add(item)
-        val index = items.indexOf(item)
-        if (index != -1) {
-            notifyItemChanged(index, FLAG_SELECTED)
-        }
+        select(item, items.indexOf(item))
     }
 
     fun selectAt(index: Int) {
-        val item = items[index]
+        select(items[index], index)
+    }
+
+    /**
+     * 选中 item
+     * 该类型允许选择才可以选中
+     * 该类型单选的话要判断移除先前选中项
+     */
+    private fun select(item: T, index: Int) {
         require(isSelectable(item.javaClass)) { TIP_SELECT_DISABLED }
+        if (selections.contains(item)) {
+            return
+        }
+        if (!getItemInfo(item.javaClass).multiSelectable) {
+            selections.firstOrNull { it.javaClass == item.javaClass }?.run {
+                selections.remove(this)
+                val preIndex = items.indexOf(this)
+                if (preIndex != -1) {
+                    notifyItemChanged(preIndex, FLAG_DESELECTED)
+                }
+            }
+        }
         selections.add(item)
-        notifyItemChanged(index, FLAG_SELECTED)
+        if (index != -1) {
+            notifyItemChanged(index, FLAG_SELECTED)
+        }
     }
 
     fun selectRange(fromIndex: Int, toIndex: Int) {
@@ -368,40 +385,25 @@ class RVAdapter<T : Any>(
 
     /**
      * 更新选中项状态
+     *
+     * 可选才处理选中事件
+     *
+     * 单选情况：
+     * 已经选中该项的话不用再处理
+     * 没有选中该项的情况下，先移除前面选中的，再添加当前的到选中列表
+     *
+     * 多选情况：
+     * 如果已经选中则移除选中，否则选中
      */
     private fun checkUpdateSelectionState(item: T, index: Int) {
-        /**
-         * 不可选的话不用往下处理
-         */
-        if (!isSelectable(item.javaClass)) {
-            return
-        }
-        /**
-         * 多选情况
-         * 如果已经选中则移除选中，否则选中
-         */
-        if (getItemInfo(item.javaClass).multiSelectable) {
-            if (selections.contains(item)) {
+        if (isSelectable(item.javaClass)) {
+            if (!getItemInfo(item.javaClass).multiSelectable) {
+                select(item, index)
+            } else if (selections.contains(item)) {
                 deselectAt(index)
             } else {
                 selectAt(index)
             }
-            return
-        }
-        /**
-         * 单选情况-已经选中该项的话不用往下处理
-         * 单选情况-没有选中该项的情况下，先移除前面选中的，再添加到选中列表
-         */
-        if (!selections.contains(item)) {
-            selections.firstOrNull { it.javaClass == item.javaClass }?.run {
-                selections.remove(this)
-                val preIndex = items.indexOf(this)
-                if (preIndex != -1) {
-                    notifyItemChanged(preIndex, FLAG_DESELECTED)
-                }
-            }
-            selections.add(item)
-            notifyItemChanged(index, FLAG_SELECTED)
         }
     }
 
