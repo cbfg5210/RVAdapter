@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.RVAdapter
 import cbfg.rvadapter.SelectStrategy
+import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.entity.RankItem
 import kotlinx.android.synthetic.main.fragment_list_select_single.view.*
 

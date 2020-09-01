@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <CheckBox
+        android:id="@+id/cbToggleSelectAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="全选" />
+
     <TextView
         android:id="@+id/tvSelections"
         android:layout_width="wrap_content"
@@ -23,5 +31,5 @@
         android:layout_marginTop="10dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_select_single" />
+        tools:listitem="@layout/item_select_multi" />
 </LinearLayout>
