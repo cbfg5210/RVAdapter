@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 class RVAdapter<T : Any>(
     context: Context,
     private val rvHolderFactory: RVHolderFactory
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<RVHolder<Any>>() {
 
     private val inflater = LayoutInflater.from(context)
     private var itemClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
@@ -339,7 +339,7 @@ class RVAdapter<T : Any>(
         return items.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RVHolder<Any> {
         val item = items[tempPosition]
         val holder = rvHolderFactory.createViewHolder(inflater, parent, item)
         holder.setListeners(
@@ -349,7 +349,7 @@ class RVAdapter<T : Any>(
                 true
             }
         )
-        return holder
+        return holder as RVHolder<Any>
     }
 
     private fun onItemClick(
@@ -405,12 +405,12 @@ class RVAdapter<T : Any>(
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RVHolder<Any>, position: Int) {
         bindRVHolder(holder, position, null)
     }
 
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: RVHolder<Any>,
         position: Int,
         payloads: MutableList<Any>
     ) {
@@ -418,11 +418,10 @@ class RVAdapter<T : Any>(
     }
 
     private fun bindRVHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: RVHolder<Any>,
         position: Int,
         payloads: MutableList<Any>?
     ) {
-        holder as RVHolder<T>
         val item = items[position]
         val isSelected = isSelectable(item.javaClass) && selections.contains(item)
         //Log.e("*****", "payloads = $payloads,position = $position")
@@ -433,22 +432,22 @@ class RVAdapter<T : Any>(
         }
     }
 
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+    override fun onViewRecycled(holder: RVHolder<Any>) {
         super.onViewRecycled(holder)
         lifecycleHandler?.onViewRecycled(holder)
     }
 
-    override fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
+    override fun onFailedToRecycleView(holder: RVHolder<Any>): Boolean {
         lifecycleHandler?.run { return this.onFailedToRecycleView(holder) }
         return super.onFailedToRecycleView(holder)
     }
 
-    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+    override fun onViewAttachedToWindow(holder: RVHolder<Any>) {
         super.onViewAttachedToWindow(holder)
         lifecycleHandler?.onViewAttachedToWindow(holder)
     }
 
-    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+    override fun onViewDetachedFromWindow(holder: RVHolder<Any>) {
         super.onViewDetachedFromWindow(holder)
         lifecycleHandler?.onViewDetachedFromWindow(holder)
     }
