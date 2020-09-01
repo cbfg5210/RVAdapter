@@ -16,6 +16,9 @@
         android:id="@+id/actionMultiSelect"
         android:title="Select - multi" />
     <item
+        android:id="@+id/actionMixSelect"
+        android:title="Select - mix" />
+    <item
         android:id="@+id/actionComplexSelect"
         android:title="Select - complex" />
 </menu>
