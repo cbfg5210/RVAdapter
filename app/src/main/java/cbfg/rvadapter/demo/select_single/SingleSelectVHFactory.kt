@@ -1,11 +1,10 @@
 package cbfg.rvadapter.demo.select_single
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import cbfg.rvadapter.R
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
+import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.entity.RankItem
 import kotlinx.android.synthetic.main.item_select_single.view.*
 

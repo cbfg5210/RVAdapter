@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "cbfg.rvadapter"
+        applicationId "cbfg.rvadapter.demo"
         minSdkVersion 17
         targetSdkVersion 30
         versionCode 1

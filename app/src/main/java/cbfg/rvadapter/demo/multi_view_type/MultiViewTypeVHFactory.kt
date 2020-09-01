@@ -3,7 +3,7 @@ package cbfg.rvadapter.demo.multi_view_type
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import cbfg.rvadapter.R
+import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
 import cbfg.rvadapter.entity.Header

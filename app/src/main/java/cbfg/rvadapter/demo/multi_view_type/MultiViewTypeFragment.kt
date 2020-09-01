@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import cbfg.rvadapter.DataHelper
-import cbfg.rvadapter.R
+import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.RVAdapter
-import cbfg.rvadapter.demo.simple.SimpleVHFactory
 import cbfg.rvadapter.entity.Header
 import cbfg.rvadapter.entity.Person
 import kotlinx.android.synthetic.main.fragment_list_common.*

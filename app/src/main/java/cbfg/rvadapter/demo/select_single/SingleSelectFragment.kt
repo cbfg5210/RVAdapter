@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import cbfg.rvadapter.R
+import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.RVAdapter
 import cbfg.rvadapter.SelectStrategy
 import cbfg.rvadapter.entity.RankItem
