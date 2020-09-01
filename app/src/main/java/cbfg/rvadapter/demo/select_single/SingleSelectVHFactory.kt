@@ -23,19 +23,21 @@ class SingleSelectVHFactory : RVHolderFactory() {
         inflater: LayoutInflater,
         parent: ViewGroup?,
         item: Any
-    ): RVHolder<out Any> {
-        return RankItemVH(inflater, parent)
-    }
+    ): RVHolder<out Any> = RankItemVH(inflater, parent)
 
-    private inner class RankItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
+    private class RankItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
         RVHolder<RankItem>(inflater, parent, R.layout.item_select_single) {
+
+        private val rbSelect = itemView.rbSelect
+        private val ivIcon = itemView.ivIcon
+        private val tvRank = itemView.tvRank
 
         override fun setContent(item: RankItem, isSelected: Boolean, payload: Any?) {
             //Log.e("*****", "payload = $payload")
-            itemView.rbSelect.isChecked = isSelected
+            rbSelect.isChecked = isSelected
             if (payload == null) {
-                itemView.ivIcon.setImageResource(R.mipmap.ic_launcher)
-                itemView.tvRank.text = item.rank.toString()
+                ivIcon.setImageResource(R.mipmap.ic_launcher)
+                tvRank.text = item.rank.toString()
             }
         }
     }
