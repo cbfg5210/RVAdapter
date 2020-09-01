@@ -67,6 +67,10 @@ class RVAdapter<T : Any>(
 
     fun getSelections(): Set<T> = selections
 
+    fun isSelectable() = selectable
+
+    fun isSelectable(clazz: Class<*>) = selectable && getItemInfo(clazz).selectable
+
     /**
      * 是否可选总开关
      * @param clearSelections 是否清空所有选中项
@@ -220,12 +224,15 @@ class RVAdapter<T : Any>(
 
     fun select(list: Collection<T>) {
         if (list.isNotEmpty()) {
+            //这里只判断第一项数据的类型是否可以选中
+            require(isSelectable(list.first().javaClass)) { TIP_SELECT_DISABLED }
             selections.addAll(list)
             notifyItemRangeChanged(0, items.size, FLAG_SELECTED)
         }
     }
 
     fun select(item: T) {
+        require(isSelectable(item.javaClass)) { TIP_SELECT_DISABLED }
         selections.add(item)
         val index = items.indexOf(item)
         if (index != -1) {
@@ -234,13 +241,17 @@ class RVAdapter<T : Any>(
     }
 
     fun selectAt(index: Int) {
-        selections.add(items[index])
+        val item = items[index]
+        require(isSelectable(item.javaClass)) { TIP_SELECT_DISABLED }
+        selections.add(item)
         notifyItemChanged(index, FLAG_SELECTED)
     }
 
     fun selectRange(fromIndex: Int, toIndex: Int) {
         val subList = items.subList(fromIndex, toIndex)
         if (subList.isNotEmpty()) {
+            //这里只判断第一项数据的类型是否可以选中
+            require(isSelectable(subList[0].javaClass)) { TIP_SELECT_DISABLED }
             selections.addAll(subList)
             notifyItemRangeChanged(fromIndex, toIndex - fromIndex, FLAG_SELECTED)
         }
@@ -251,6 +262,7 @@ class RVAdapter<T : Any>(
      * @param needNotify true：刷新
      */
     fun select(clazz: Class<*>, needNotify: Boolean = true) {
+        require(isSelectable(clazz)) { TIP_SELECT_DISABLED }
         if (items.isNotEmpty()) {
             items.forEach {
                 if (it.javaClass == clazz) {
@@ -356,21 +368,17 @@ class RVAdapter<T : Any>(
      * 更新选中项状态
      */
     private fun checkUpdateSelectionState(item: T, index: Int) {
-        if (!selectable) {
-            return
-        }
-        val itemInfo = getItemInfo(item.javaClass)
         /**
          * 不可选的话不用往下处理
          */
-        if (!itemInfo.selectable) {
+        if (!isSelectable(item.javaClass)) {
             return
         }
         /**
          * 多选情况
          * 如果已经选中则移除选中，否则选中
          */
-        if (itemInfo.multiSelectable) {
+        if (getItemInfo(item.javaClass).multiSelectable) {
             if (selections.contains(item)) {
                 deselectAt(index)
             } else {
@@ -451,6 +459,7 @@ class RVAdapter<T : Any>(
     )
 
     companion object {
+        private const val TIP_SELECT_DISABLED = "此类型数据当前不可选中！"
         const val FLAG_SELECTED = 10101
         const val FLAG_DESELECTED = 10102
         const val FLAG_SELECTABLE = 10103
