@@ -1,10 +1,12 @@
 package cbfg.rvadapter.demo.state
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
 import cbfg.rvadapter.demo.R
+import kotlinx.android.synthetic.main.layout_state_empty.view.*
 
 /**
  * @author:  Tom Hawk
@@ -38,7 +40,16 @@ class StateVHFactory : RVHolderFactory() {
         inflater: LayoutInflater,
         parent: ViewGroup?
     ) : RVHolder<RVState>(inflater, parent, R.layout.layout_state_loading) {
+        private val tvTip = itemView.tvTip
         override fun setContent(item: RVState, isSelected: Boolean, payload: Any?) {
+            tvTip.text = item.tip
+        }
+
+        override fun setListeners(
+            itemClickListener: View.OnClickListener?,
+            itemLongClickListener: View.OnLongClickListener?
+        ) {
+            //无需点击事件
         }
     }
 
@@ -46,7 +57,11 @@ class StateVHFactory : RVHolderFactory() {
         inflater: LayoutInflater,
         parent: ViewGroup?
     ) : RVHolder<RVState>(inflater, parent, R.layout.layout_state_empty) {
+        private val tvTip = itemView.tvTip
+        private val ivImg = itemView.ivImg
         override fun setContent(item: RVState, isSelected: Boolean, payload: Any?) {
+            ivImg.setImageResource(item.imgSrc)
+            tvTip.text = item.tip
         }
     }
 
@@ -54,7 +69,11 @@ class StateVHFactory : RVHolderFactory() {
         inflater: LayoutInflater,
         parent: ViewGroup?
     ) : RVHolder<RVState>(inflater, parent, R.layout.layout_state_error) {
+        private val tvTip = itemView.tvTip
+        private val ivImg = itemView.ivImg
         override fun setContent(item: RVState, isSelected: Boolean, payload: Any?) {
+            ivImg.setImageResource(item.imgSrc)
+            tvTip.text = item.tip
         }
     }
 }

@@ -31,6 +31,7 @@ class StateFragment : Fragment(R.layout.fragment_state), View.OnClickListener {
         adapter = RVAdapter<Person>(view.context, SimpleVHFactory())
             .bindRecyclerView(rvList)
             .setStateHolderFactory(StateVHFactory())
+            //.setStateHolderFactory(StateVHFactory(), autoShowEmptyState = false)
             .setStateClickListener { _, item, position ->
                 Toast.makeText(
                     view.context,
@@ -43,13 +44,21 @@ class StateFragment : Fragment(R.layout.fragment_state), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.btnLoading -> {
-                adapter.showStatePage(RVState(RVState.State.LOADING, 0, "Loading..."))
+                showStatePage(RVState.State.LOADING, 0, "正在努力加载...${System.currentTimeMillis()}")
             }
             R.id.btnEmpty -> {
-                adapter.showStatePage(RVState(RVState.State.EMPTY, 0, "No data!"), true)
+                showStatePage(
+                    RVState.State.EMPTY,
+                    R.color.colorAccent,
+                    "没有数据喔~${System.currentTimeMillis()}"
+                )
             }
             R.id.btnError -> {
-                adapter.showStatePage(RVState(RVState.State.ERROR, 0, "Error!"))
+                showStatePage(
+                    RVState.State.ERROR,
+                    R.color.colorPrimary,
+                    "出错啦！${System.currentTimeMillis()}"
+                )
             }
             R.id.btnSetData -> {
                 adapter.setItems(DataHelper.getPeople())
@@ -58,5 +67,9 @@ class StateFragment : Fragment(R.layout.fragment_state), View.OnClickListener {
                 adapter.clear()
             }
         }
+    }
+
+    private fun showStatePage(state: RVState.State, imgSrc: Int, tip: String) {
+        adapter.showStatePage(RVState(state, imgSrc, tip), state == RVState.State.EMPTY)
     }
 }
