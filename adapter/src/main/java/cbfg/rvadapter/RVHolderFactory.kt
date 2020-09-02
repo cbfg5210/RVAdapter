@@ -14,10 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class RVHolderFactory {
     internal lateinit var inflater: LayoutInflater
 
-    protected fun inflate(
-        @LayoutRes layoutRes: Int,
-        parent: ViewGroup?
-    ): View = inflater.inflate(layoutRes, parent, false)
+    protected fun inflate(@LayoutRes layoutRes: Int, parent: ViewGroup?): View {
+        return inflater.inflate(layoutRes, parent, false)
+    }
 
     /**
      * 供 [RecyclerView.Adapter.getItemViewType] 调用，
