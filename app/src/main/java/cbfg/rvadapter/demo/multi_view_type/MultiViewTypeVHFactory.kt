@@ -2,10 +2,11 @@ package cbfg.rvadapter.demo.multi_view_type
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
+import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.entity.Header
 import cbfg.rvadapter.entity.Person
 import kotlinx.android.synthetic.main.item_header.view.*
@@ -22,24 +23,18 @@ class MultiViewTypeVHFactory : RVHolderFactory() {
         parent: ViewGroup?,
         item: Any
     ): RVHolder<out Any> {
-        return if (item is Header) HeaderVH(inflater, parent)
-        else PersonVH(inflater, parent)
+        return if (item is Header) HeaderVH(inflater.inflate(R.layout.item_header, parent, false))
+        else PersonVH(inflater.inflate(R.layout.item_person, parent, false))
     }
 
-    private class HeaderVH(
-        inflater: LayoutInflater,
-        parent: ViewGroup?
-    ) : RVHolder<Header>(inflater, parent, R.layout.item_header) {
+    private class HeaderVH(itemView: View) : RVHolder<Header>(itemView) {
         private val tvHeader = itemView.tvHeader
         override fun setContent(item: Header, isSelected: Boolean, payload: Any?) {
             tvHeader.text = item.txt
         }
     }
 
-    private class PersonVH(
-        inflater: LayoutInflater,
-        parent: ViewGroup?
-    ) : RVHolder<Person>(inflater, parent, R.layout.item_person) {
+    private class PersonVH(itemView: View) : RVHolder<Person>(itemView) {
         private val ivAvatar = itemView.ivAvatar
         private val tvName = itemView.tvName
 

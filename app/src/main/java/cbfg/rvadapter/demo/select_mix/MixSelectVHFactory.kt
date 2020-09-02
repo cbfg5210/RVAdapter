@@ -27,13 +27,10 @@ class MixSelectVHFactory(
         parent: ViewGroup?,
         item: Any
     ): RVHolder<out Any> {
-        return RankItemVH(inflater, parent)
+        return RankItemVH(inflater.inflate(R.layout.item_select_mix, parent, false))
     }
 
-    private inner class RankItemVH(
-        inflater: LayoutInflater,
-        parent: ViewGroup?
-    ) : RVHolder<RankItem>(inflater, parent, R.layout.item_select_mix) {
+    private inner class RankItemVH(itemView: View) : RVHolder<RankItem>(itemView) {
 
         override fun setContent(item: RankItem, isSelected: Boolean, payload: Any?) {
             if (payload != null) {

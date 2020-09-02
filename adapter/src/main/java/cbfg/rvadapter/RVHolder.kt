@@ -1,9 +1,6 @@
 package cbfg.rvadapter
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 
 /**
@@ -11,12 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
  * 添加时间: 2020/8/26 13:22
  * 功能描述:
  */
-abstract class RVHolder<T : Any>(
-    inflater: LayoutInflater,
-    parent: ViewGroup?,
-    @LayoutRes layoutRes: Int
-) : RecyclerView.ViewHolder(inflater.inflate(layoutRes, parent, false)) {
-
+abstract class RVHolder<T : Any>(itemView: View) : RecyclerView.ViewHolder(itemView) {
     /**
      * 设置内容
      */

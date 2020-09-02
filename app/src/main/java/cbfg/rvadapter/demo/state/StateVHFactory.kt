@@ -30,16 +30,31 @@ class StateVHFactory : RVHolderFactory() {
     ): RVHolder<out Any> {
         item as RVState
         return when (item.state) {
-            RVState.State.LOADING -> LoadingVHolder(inflater, parent)
-            RVState.State.EMPTY -> EmptyVHolder(inflater, parent)
-            RVState.State.ERROR -> ErrorVHolder(inflater, parent)
+            RVState.State.LOADING -> LoadingVHolder(
+                inflater.inflate(
+                    R.layout.layout_state_loading,
+                    parent,
+                    false
+                )
+            )
+            RVState.State.EMPTY -> EmptyVHolder(
+                inflater.inflate(
+                    R.layout.layout_state_empty,
+                    parent,
+                    false
+                )
+            )
+            RVState.State.ERROR -> ErrorVHolder(
+                inflater.inflate(
+                    R.layout.layout_state_error,
+                    parent,
+                    false
+                )
+            )
         }
     }
 
-    private class LoadingVHolder(
-        inflater: LayoutInflater,
-        parent: ViewGroup?
-    ) : RVHolder<RVState>(inflater, parent, R.layout.layout_state_loading) {
+    private class LoadingVHolder(itemView: View) : RVHolder<RVState>(itemView) {
         private val tvTip = itemView.tvTip
         override fun setContent(item: RVState, isSelected: Boolean, payload: Any?) {
             tvTip.text = item.tip
@@ -53,10 +68,7 @@ class StateVHFactory : RVHolderFactory() {
         }
     }
 
-    private class EmptyVHolder(
-        inflater: LayoutInflater,
-        parent: ViewGroup?
-    ) : RVHolder<RVState>(inflater, parent, R.layout.layout_state_empty) {
+    private class EmptyVHolder(itemView: View) : RVHolder<RVState>(itemView) {
         private val tvTip = itemView.tvTip
         private val ivImg = itemView.ivImg
         override fun setContent(item: RVState, isSelected: Boolean, payload: Any?) {
@@ -65,10 +77,7 @@ class StateVHFactory : RVHolderFactory() {
         }
     }
 
-    private class ErrorVHolder(
-        inflater: LayoutInflater,
-        parent: ViewGroup?
-    ) : RVHolder<RVState>(inflater, parent, R.layout.layout_state_error) {
+    private class ErrorVHolder(itemView: View) : RVHolder<RVState>(itemView) {
         private val tvTip = itemView.tvTip
         private val ivImg = itemView.ivImg
         override fun setContent(item: RVState, isSelected: Boolean, payload: Any?) {

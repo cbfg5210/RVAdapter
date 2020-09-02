@@ -1,6 +1,7 @@
 package cbfg.rvadapter.demo.select_multi
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
@@ -23,11 +24,9 @@ class MultiSelectVHFactory : RVHolderFactory() {
         inflater: LayoutInflater,
         parent: ViewGroup?,
         item: Any
-    ): RVHolder<out Any> = RankItemVH(inflater, parent)
+    ): RVHolder<out Any> = RankItemVH(inflater.inflate(R.layout.item_select_multi, parent, false))
 
-    private class RankItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
-        RVHolder<RankItem>(inflater, parent, R.layout.item_select_multi) {
-
+    private class RankItemVH(itemView: View) : RVHolder<RankItem>(itemView) {
         private val cbSelect = itemView.cbSelect
         private val ivIcon = itemView.ivIcon
         private val tvRank = itemView.tvRank

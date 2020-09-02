@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
+import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.entity.Person
 import kotlinx.android.synthetic.main.item_person.view.*
 
@@ -22,13 +22,10 @@ class SimpleVHFactory : RVHolderFactory() {
         parent: ViewGroup?,
         item: Any
     ): RVHolder<out Any> {
-        return PersonVH(inflater, parent)
+        return PersonVH(inflater.inflate(R.layout.item_person, parent, false))
     }
 
-    private class PersonVH(
-        inflater: LayoutInflater,
-        parent: ViewGroup?
-    ) : RVHolder<Person>(inflater, parent, R.layout.item_person) {
+    private class PersonVH(itemView: View) : RVHolder<Person>(itemView) {
         private val ivAvatar = itemView.ivAvatar
         private val tvName = itemView.tvName
 

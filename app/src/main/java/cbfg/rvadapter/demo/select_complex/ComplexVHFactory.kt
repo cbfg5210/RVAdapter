@@ -1,6 +1,7 @@
 package cbfg.rvadapter.demo.select_complex
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
@@ -26,16 +27,20 @@ class ComplexVHFactory : RVHolderFactory() {
         parent: ViewGroup?,
         item: Any
     ): RVHolder<out Any> {
-        return if (item is ShopItem) ShopItemVH(inflater, parent)
-        else CommodityItemVH(inflater, parent)
+        return if (item is ShopItem) ShopItemVH(
+            inflater.inflate(
+                R.layout.item_complex_shop,
+                parent,
+                false
+            )
+        )
+        else CommodityItemVH(inflater.inflate(R.layout.item_complex_commodity, parent, false))
     }
 
     /**
      * 商店 ViewHolder
      */
-    private class ShopItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
-        RVHolder<ShopItem>(inflater, parent, R.layout.item_complex_shop) {
-
+    private class ShopItemVH(itemView: View) : RVHolder<ShopItem>(itemView) {
         private val cbToggleSelectAll = itemView.cbToggleSelectAll
         private val ivShopImage = itemView.ivShopImage
         private val tvShopName = itemView.tvShopName
@@ -52,9 +57,7 @@ class ComplexVHFactory : RVHolderFactory() {
     /**
      * 商品 ViewHolder
      */
-    private class CommodityItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
-        RVHolder<CommodityItem>(inflater, parent, R.layout.item_complex_commodity) {
-
+    private class CommodityItemVH(itemView: View) : RVHolder<CommodityItem>(itemView) {
         private val cbSelect = itemView.cbSelect
         private val ivImage = itemView.ivImage
         private val tvName = itemView.tvName

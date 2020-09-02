@@ -1,6 +1,7 @@
 package cbfg.rvadapter.demo.drag
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
@@ -25,11 +26,10 @@ class DragVHFactory : RVHolderFactory() {
         parent: ViewGroup?,
         item: Any
     ): RVHolder<out Any> {
-        return RankItemVH(inflater, parent)
+        return RankItemVH(inflater.inflate(R.layout.item_diff, parent, false))
     }
 
-    private class RankItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
-        RVHolder<RankItem>(inflater, parent, R.layout.item_diff) {
+    private class RankItemVH(itemView: View) : RVHolder<RankItem>(itemView) {
         private val tvRank = itemView.tvRank
         private val ivIcon = itemView.ivIcon
         override fun setContent(item: RankItem, isSelected: Boolean, payload: Any?) {
