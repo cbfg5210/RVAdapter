@@ -28,6 +28,9 @@
         android:id="@+id/actionDiff"
         android:title="Diff" />
     <item
+        android:id="@+id/actionDrag"
+        android:title="Drag" />
+    <item
         android:id="@+id/actionLifecycle"
         android:title="Select - lifecycle" />
 </menu>
