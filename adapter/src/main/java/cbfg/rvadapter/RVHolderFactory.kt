@@ -24,6 +24,7 @@ abstract class RVHolderFactory {
     abstract fun createViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup?,
+        viewType: Int,
         item: Any
     ): RVHolder<out Any>
 }

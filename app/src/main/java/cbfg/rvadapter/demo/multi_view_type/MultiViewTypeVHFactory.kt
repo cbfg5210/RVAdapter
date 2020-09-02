@@ -21,6 +21,7 @@ class MultiViewTypeVHFactory : RVHolderFactory() {
     override fun createViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup?,
+        viewType: Int,
         item: Any
     ): RVHolder<out Any> {
         return if (item is Header) HeaderVH(inflater.inflate(R.layout.item_header, parent, false))

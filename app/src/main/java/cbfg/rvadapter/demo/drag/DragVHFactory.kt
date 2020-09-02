@@ -24,6 +24,7 @@ class DragVHFactory : RVHolderFactory() {
     override fun createViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup?,
+        viewType: Int,
         item: Any
     ): RVHolder<out Any> {
         return RankItemVH(inflater.inflate(R.layout.item_diff, parent, false))

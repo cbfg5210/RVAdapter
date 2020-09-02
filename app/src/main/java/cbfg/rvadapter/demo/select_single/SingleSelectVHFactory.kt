@@ -23,6 +23,7 @@ class SingleSelectVHFactory : RVHolderFactory() {
     override fun createViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup?,
+        viewType: Int,
         item: Any
     ): RVHolder<out Any> = RankItemVH(
         inflater.inflate(R.layout.item_select_single, parent, false)

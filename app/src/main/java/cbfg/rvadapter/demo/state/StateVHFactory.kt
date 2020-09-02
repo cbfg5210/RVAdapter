@@ -26,6 +26,7 @@ class StateVHFactory : RVHolderFactory() {
     override fun createViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup?,
+        viewType: Int,
         item: Any
     ): RVHolder<out Any> {
         item as RVState

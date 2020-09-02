@@ -448,7 +448,7 @@ class RVAdapter<T : Any>(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RVHolder<Any> {
         if (items.isEmpty()) {
             (normalState ?: emptyState)?.run {
-                val holder = stateHolderFactory.createViewHolder(inflater, parent, this)
+                val holder = stateHolderFactory.createViewHolder(inflater, parent, viewType, this)
                 holder.setListeners(View.OnClickListener {
                     stateClickListener?.invoke(it, this, holder.adapterPosition)
                 }, View.OnLongClickListener {
@@ -459,7 +459,7 @@ class RVAdapter<T : Any>(
             }
         }
         val item = items[tempPosition]
-        val holder = rvHolderFactory.createViewHolder(inflater, parent, item)
+        val holder = rvHolderFactory.createViewHolder(inflater, parent, viewType, item)
         holder.setListeners(
             View.OnClickListener { onItemClick(holder, it, itemClickListener) },
             View.OnLongClickListener {
