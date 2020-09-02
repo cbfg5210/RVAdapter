@@ -17,16 +17,10 @@ class RVAdapter<T : Any>(
 ) : RecyclerView.Adapter<RVHolder<Any>>() {
 
     private val inflater = LayoutInflater.from(context)
-    private var itemClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
-    private var itemLongClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
-
-    /**
-     * 如果需要处理 adapter 中的一些事件则传入此对象实例
-     */
-    private var lifecycleHandler: RVLifecycleHandler? = null
-
     private val items = ArrayList<T>()
     private val selections = HashSet<T>()
+    private var itemClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
+    private var itemLongClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
 
     /**
      * 是否可选总开关
@@ -34,14 +28,29 @@ class RVAdapter<T : Any>(
     private var selectable = false
 
     /**
+     * 保存 item 类型及对应的属性信息
+     */
+    private var itemInfoMap = HashMap<Class<*>, ItemInfo>()
+
+    /**
      * 临时变量，用于记录当前 [getItemViewType] 的位置
      */
     private var tempPosition = 0
 
     /**
-     * 保存 item 类型及对应的属性信息
+     * 如果需要处理 adapter 中的一些事件则传入此对象实例
      */
-    private var itemInfoMap = HashMap<Class<*>, ItemInfo>()
+    private var lifecycleHandler: RVLifecycleHandler? = null
+
+    /**
+     * 状态页相关
+     * [autoShowEmptyState] true：如果 [emptyState] 已经赋值过的话，后续数据为空会自动显示空白页
+     */
+    private var normalState: Any? = null
+    private var emptyState: Any? = null
+    private var autoShowEmptyState = true
+    private lateinit var stateHolderFactory: RVHolderFactory
+    private var stateClickListener: ((view: View, item: Any, position: Int) -> Unit)? = null
 
     fun bindRecyclerView(rv: RecyclerView): RVAdapter<T> {
         rv.adapter = this
@@ -58,8 +67,25 @@ class RVAdapter<T : Any>(
         return this
     }
 
+    fun setStateClickListener(listener: (view: View, item: Any, position: Int) -> Unit): RVAdapter<T> {
+        this.stateClickListener = listener
+        return this
+    }
+
     fun setLifecycleHandler(lifecycleHandler: RVLifecycleHandler): RVAdapter<T> {
         this.lifecycleHandler = lifecycleHandler
+        return this
+    }
+
+    /**
+     * @param autoShowEmptyState true：如果 [emptyState] 已经赋值过的话，后续数据为空会自动显示空白页
+     */
+    fun setStateHolderFactory(
+        stateHolderFactory: RVHolderFactory,
+        autoShowEmptyState: Boolean = true
+    ): RVAdapter<T> {
+        this.stateHolderFactory = stateHolderFactory
+        this.autoShowEmptyState = autoShowEmptyState
         return this
     }
 
@@ -373,6 +399,20 @@ class RVAdapter<T : Any>(
     }
 
     /**
+     * 显示状态页，调用这个方法前要设置 [stateHolderFactory]
+     * @param isEmptyState true：空白页
+     */
+    fun showStatePage(state: Any, isEmptyState: Boolean = false) {
+        if (isEmptyState) {
+            emptyState = state
+            normalState = null
+        } else {
+            normalState = state
+        }
+        notifyDataSetChanged()
+    }
+
+    /**
      * 获取 item 信息，没有则创建保存
      */
     private fun getItemInfo(clazz: Class<*>): ItemInfo {
@@ -380,17 +420,44 @@ class RVAdapter<T : Any>(
     }
 
     override fun getItemViewType(position: Int): Int {
+        if (items.isEmpty()) {
+            normalState ?: emptyState?.run { return stateHolderFactory.getItemViewType(this) }
+        }
         tempPosition = position
         val item = items[position]
         val viewType = rvHolderFactory.getItemViewType(item)
         return if (viewType != -1) viewType else getItemInfo(item.javaClass).viewType
     }
 
+    fun getRealItemCount() = items.size
+
     override fun getItemCount(): Int {
+        if (items.isEmpty()) {
+            return if (normalState != null || emptyState != null) 1 else 0
+        }
+        /**
+         * 如果有数据了的话要清空状态 item
+         */
+        normalState = null
+        if (!autoShowEmptyState) {
+            emptyState = null
+        }
         return items.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RVHolder<Any> {
+        if (items.isEmpty()) {
+            normalState ?: emptyState?.run {
+                val holder = stateHolderFactory.createViewHolder(inflater, parent, this)
+                holder.setListeners(View.OnClickListener {
+                    stateClickListener?.invoke(it, this, holder.adapterPosition)
+                }, View.OnLongClickListener {
+                    stateClickListener?.invoke(it, this, holder.adapterPosition)
+                    true
+                })
+                return holder as RVHolder<Any>
+            }
+        }
         val item = items[tempPosition]
         val holder = rvHolderFactory.createViewHolder(inflater, parent, item)
         holder.setListeners(
