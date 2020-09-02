@@ -16,9 +16,8 @@ abstract class RVHolderFactory {
 
     protected fun inflate(
         @LayoutRes layoutRes: Int,
-        parent: ViewGroup?,
-        attachToRoot: Boolean = false
-    ): View = inflater.inflate(layoutRes, parent, attachToRoot)
+        parent: ViewGroup?
+    ): View = inflater.inflate(layoutRes, parent, false)
 
     /**
      * 供 [RecyclerView.Adapter.getItemViewType] 调用，
