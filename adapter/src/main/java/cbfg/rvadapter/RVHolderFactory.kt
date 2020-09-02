@@ -1,7 +1,9 @@
 package cbfg.rvadapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 
 /**
@@ -10,6 +12,14 @@ import androidx.recyclerview.widget.RecyclerView
  * 功能描述:
  */
 abstract class RVHolderFactory {
+    internal lateinit var inflater: LayoutInflater
+
+    protected fun inflate(
+        @LayoutRes layoutRes: Int,
+        parent: ViewGroup?,
+        attachToRoot: Boolean = false
+    ): View = inflater.inflate(layoutRes, parent, attachToRoot)
+
     /**
      * 供 [RecyclerView.Adapter.getItemViewType] 调用，
      * 默认支持多 view type（默认会以数据类型区分），
@@ -22,7 +32,6 @@ abstract class RVHolderFactory {
      * 供 [RecyclerView.Adapter.onCreateViewHolder] 调用
      */
     abstract fun createViewHolder(
-        inflater: LayoutInflater,
         parent: ViewGroup?,
         viewType: Int,
         item: Any

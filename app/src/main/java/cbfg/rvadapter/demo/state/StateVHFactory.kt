@@ -1,6 +1,5 @@
 package cbfg.rvadapter.demo.state
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
@@ -24,12 +23,11 @@ class StateVHFactory : RVHolderFactory() {
     }
 
     override fun createViewHolder(
-        inflater: LayoutInflater,
         parent: ViewGroup?,
         viewType: Int,
         item: Any
     ): RVHolder<out Any> {
-        val itemView = inflater.inflate(viewType, parent, false)
+        val itemView = inflate(viewType, parent)
         return if (viewType == R.layout.layout_state_loading) LoadingVHolder(itemView)
         else NormalVHolder(itemView)
     }

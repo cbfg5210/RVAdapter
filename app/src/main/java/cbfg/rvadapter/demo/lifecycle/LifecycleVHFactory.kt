@@ -2,14 +2,13 @@ package cbfg.rvadapter.demo.lifecycle
 
 import android.annotation.SuppressLint
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
 import cbfg.rvadapter.RVLifecycleHandler
+import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.entity.Person
 import kotlinx.android.synthetic.main.item_person.view.*
 
@@ -21,12 +20,11 @@ import kotlinx.android.synthetic.main.item_person.view.*
 @Suppress("UNCHECKED_CAST")
 class LifecycleVHFactory : RVHolderFactory() {
     override fun createViewHolder(
-        inflater: LayoutInflater,
         parent: ViewGroup?,
         viewType: Int,
         item: Any
     ): RVHolder<out Any> {
-        return PersonVH(inflater.inflate(R.layout.item_person, parent, false))
+        return PersonVH(inflate(R.layout.item_person, parent))
     }
 
     private class PersonVH(itemView: View) : RVHolder<Person>(itemView) {

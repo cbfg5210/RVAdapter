@@ -1,6 +1,5 @@
 package cbfg.rvadapter.demo.select_mix
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cbfg.rvadapter.*
@@ -23,12 +22,11 @@ class MixSelectVHFactory(
 ) : RVHolderFactory() {
 
     override fun createViewHolder(
-        inflater: LayoutInflater,
         parent: ViewGroup?,
         viewType: Int,
         item: Any
     ): RVHolder<out Any> {
-        return RankItemVH(inflater.inflate(R.layout.item_select_mix, parent, false))
+        return RankItemVH(inflate(R.layout.item_select_mix, parent))
     }
 
     private inner class RankItemVH(itemView: View) : RVHolder<RankItem>(itemView) {

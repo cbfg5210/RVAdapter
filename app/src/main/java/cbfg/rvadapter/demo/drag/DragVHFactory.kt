@@ -1,6 +1,5 @@
 package cbfg.rvadapter.demo.drag
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
@@ -22,12 +21,11 @@ import kotlinx.android.synthetic.main.item_diff.view.*
 class DragVHFactory : RVHolderFactory() {
 
     override fun createViewHolder(
-        inflater: LayoutInflater,
         parent: ViewGroup?,
         viewType: Int,
         item: Any
     ): RVHolder<out Any> {
-        return RankItemVH(inflater.inflate(R.layout.item_diff, parent, false))
+        return RankItemVH(inflate(R.layout.item_diff, parent))
     }
 
     private class RankItemVH(itemView: View) : RVHolder<RankItem>(itemView) {

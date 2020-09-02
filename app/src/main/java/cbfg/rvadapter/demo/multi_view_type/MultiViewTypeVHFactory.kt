@@ -1,7 +1,6 @@
 package cbfg.rvadapter.demo.multi_view_type
 
 import android.annotation.SuppressLint
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
@@ -19,13 +18,12 @@ import kotlinx.android.synthetic.main.item_person.view.*
  */
 class MultiViewTypeVHFactory : RVHolderFactory() {
     override fun createViewHolder(
-        inflater: LayoutInflater,
         parent: ViewGroup?,
         viewType: Int,
         item: Any
     ): RVHolder<out Any> {
-        return if (item is Header) HeaderVH(inflater.inflate(R.layout.item_header, parent, false))
-        else PersonVH(inflater.inflate(R.layout.item_person, parent, false))
+        return if (item is Header) HeaderVH(inflate(R.layout.item_header, parent))
+        else PersonVH(inflate(R.layout.item_person, parent))
     }
 
     private class HeaderVH(itemView: View) : RVHolder<Header>(itemView) {

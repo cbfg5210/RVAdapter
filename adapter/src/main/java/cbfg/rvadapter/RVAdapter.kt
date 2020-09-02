@@ -16,7 +16,6 @@ class RVAdapter<T : Any>(
     private val rvHolderFactory: RVHolderFactory
 ) : RecyclerView.Adapter<RVHolder<Any>>() {
 
-    private val inflater = LayoutInflater.from(context)
     private val items = ArrayList<T>()
     private val selections = HashSet<T>()
     private var itemClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
@@ -52,6 +51,10 @@ class RVAdapter<T : Any>(
     private lateinit var stateHolderFactory: RVHolderFactory
     private var stateClickListener: ((view: View, item: Any, position: Int) -> Unit)? = null
 
+    init {
+        rvHolderFactory.inflater = LayoutInflater.from(context)
+    }
+
     fun bindRecyclerView(rv: RecyclerView): RVAdapter<T> {
         rv.adapter = this
         return this
@@ -85,6 +88,7 @@ class RVAdapter<T : Any>(
         autoShowEmptyState: Boolean = true
     ): RVAdapter<T> {
         this.stateHolderFactory = stateHolderFactory
+        this.stateHolderFactory.inflater = rvHolderFactory.inflater
         this.autoShowEmptyState = autoShowEmptyState
         return this
     }
@@ -448,7 +452,7 @@ class RVAdapter<T : Any>(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RVHolder<Any> {
         if (items.isEmpty()) {
             (normalState ?: emptyState)?.run {
-                val holder = stateHolderFactory.createViewHolder(inflater, parent, viewType, this)
+                val holder = stateHolderFactory.createViewHolder(parent, viewType, this)
                 holder.setListeners(View.OnClickListener {
                     stateClickListener?.invoke(it, this, holder.adapterPosition)
                 }, View.OnLongClickListener {
@@ -459,7 +463,7 @@ class RVAdapter<T : Any>(
             }
         }
         val item = items[tempPosition]
-        val holder = rvHolderFactory.createViewHolder(inflater, parent, viewType, item)
+        val holder = rvHolderFactory.createViewHolder(parent, viewType, item)
         holder.setListeners(
             View.OnClickListener { onItemClick(holder, it, itemClickListener) },
             View.OnLongClickListener {

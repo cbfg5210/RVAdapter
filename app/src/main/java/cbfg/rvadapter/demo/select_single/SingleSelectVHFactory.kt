@@ -1,6 +1,5 @@
 package cbfg.rvadapter.demo.select_single
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
@@ -21,12 +20,11 @@ import kotlinx.android.synthetic.main.item_select_single.view.*
 class SingleSelectVHFactory : RVHolderFactory() {
 
     override fun createViewHolder(
-        inflater: LayoutInflater,
         parent: ViewGroup?,
         viewType: Int,
         item: Any
     ): RVHolder<out Any> = RankItemVH(
-        inflater.inflate(R.layout.item_select_single, parent, false)
+        inflate(R.layout.item_select_single, parent)
     )
 
     private class RankItemVH(itemView: View) : RVHolder<RankItem>(itemView) {

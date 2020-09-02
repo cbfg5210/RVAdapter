@@ -1,7 +1,6 @@
 package cbfg.rvadapter.demo.simple
 
 import android.annotation.SuppressLint
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
@@ -18,12 +17,11 @@ import kotlinx.android.synthetic.main.item_person.view.*
 @Suppress("UNCHECKED_CAST")
 class SimpleVHFactory : RVHolderFactory() {
     override fun createViewHolder(
-        inflater: LayoutInflater,
         parent: ViewGroup?,
         viewType: Int,
         item: Any
     ): RVHolder<out Any> {
-        return PersonVH(inflater.inflate(R.layout.item_person, parent, false))
+        return PersonVH(inflate(R.layout.item_person, parent))
     }
 
     private class PersonVH(itemView: View) : RVHolder<Person>(itemView) {

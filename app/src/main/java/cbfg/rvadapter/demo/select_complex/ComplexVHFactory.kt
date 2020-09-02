@@ -1,6 +1,5 @@
 package cbfg.rvadapter.demo.select_complex
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
@@ -23,19 +22,12 @@ import kotlinx.android.synthetic.main.item_complex_shop.view.*
 class ComplexVHFactory : RVHolderFactory() {
 
     override fun createViewHolder(
-        inflater: LayoutInflater,
         parent: ViewGroup?,
         viewType: Int,
         item: Any
     ): RVHolder<out Any> {
-        return if (item is ShopItem) ShopItemVH(
-            inflater.inflate(
-                R.layout.item_complex_shop,
-                parent,
-                false
-            )
-        )
-        else CommodityItemVH(inflater.inflate(R.layout.item_complex_commodity, parent, false))
+        return if (item is ShopItem) ShopItemVH(inflate(R.layout.item_complex_shop, parent))
+        else CommodityItemVH(inflate(R.layout.item_complex_commodity, parent))
     }
 
     /**
