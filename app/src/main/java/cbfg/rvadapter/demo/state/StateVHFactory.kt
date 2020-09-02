@@ -30,15 +30,13 @@ class StateVHFactory : RVHolderFactory() {
         item: Any
     ): RVHolder<out Any> {
         val itemView = inflater.inflate(viewType, parent, false)
-        return when (viewType) {
-            R.layout.layout_state_loading -> LoadingVHolder(itemView)
-            R.layout.layout_state_empty -> EmptyVHolder(itemView)
-            else -> ErrorVHolder(itemView)
-        }
+        return if (viewType == R.layout.layout_state_loading) LoadingVHolder(itemView)
+        else NormalVHolder(itemView)
     }
 
     private class LoadingVHolder(itemView: View) : RVHolder<RVState>(itemView) {
         private val tvTip = itemView.tvTip
+
         override fun setContent(item: RVState, isSelected: Boolean, payload: Any?) {
             tvTip.text = item.tip
         }
@@ -51,16 +49,7 @@ class StateVHFactory : RVHolderFactory() {
         }
     }
 
-    private class EmptyVHolder(itemView: View) : RVHolder<RVState>(itemView) {
-        private val tvTip = itemView.tvTip
-        private val ivImg = itemView.ivImg
-        override fun setContent(item: RVState, isSelected: Boolean, payload: Any?) {
-            ivImg.setImageResource(item.imgSrc)
-            tvTip.text = item.tip
-        }
-    }
-
-    private class ErrorVHolder(itemView: View) : RVHolder<RVState>(itemView) {
+    private class NormalVHolder(itemView: View) : RVHolder<RVState>(itemView) {
         private val tvTip = itemView.tvTip
         private val ivImg = itemView.ivImg
         override fun setContent(item: RVState, isSelected: Boolean, payload: Any?) {
