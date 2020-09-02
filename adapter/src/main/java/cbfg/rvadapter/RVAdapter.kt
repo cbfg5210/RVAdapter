@@ -421,7 +421,7 @@ class RVAdapter<T : Any>(
 
     override fun getItemViewType(position: Int): Int {
         if (items.isEmpty()) {
-            normalState ?: emptyState?.run { return stateHolderFactory.getItemViewType(this) }
+            (normalState ?: emptyState)?.run { return stateHolderFactory.getItemViewType(this) }
         }
         tempPosition = position
         val item = items[position]
@@ -447,7 +447,7 @@ class RVAdapter<T : Any>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RVHolder<Any> {
         if (items.isEmpty()) {
-            normalState ?: emptyState?.run {
+            (normalState ?: emptyState)?.run {
                 val holder = stateHolderFactory.createViewHolder(inflater, parent, this)
                 holder.setListeners(View.OnClickListener {
                     stateClickListener?.invoke(it, this, holder.adapterPosition)
@@ -525,6 +525,10 @@ class RVAdapter<T : Any>(
         position: Int,
         payloads: MutableList<Any>?
     ) {
+        if (items.isEmpty()) {
+            (normalState ?: emptyState)?.run { holder.setContent(this, false) }
+            return
+        }
         val item = items[position]
         val isSelected = isSelectable(item.javaClass) && selections.contains(item)
         //Log.e("*****", "payloads = $payloads,position = $position")

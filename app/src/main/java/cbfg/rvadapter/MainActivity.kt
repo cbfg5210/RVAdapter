@@ -12,6 +12,7 @@ import cbfg.rvadapter.demo.select_mix.MixSelectFragment
 import cbfg.rvadapter.demo.select_multi.MultiSelectFragment
 import cbfg.rvadapter.demo.select_single.SingleSelectFragment
 import cbfg.rvadapter.demo.simple.SimpleFragment
+import cbfg.rvadapter.demo.state.StateFragment
 
 class MainActivity : AppCompatActivity() {
     private var currentMenuItemId = -1
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
             R.id.actionMultiSelect -> MultiSelectFragment()
             R.id.actionMixSelect -> MixSelectFragment()
             R.id.actionComplexSelect -> ComplexFragment()
+            R.id.actionState -> StateFragment()
             R.id.actionLifecycle -> LifecycleFragment()
             else -> return
         }
