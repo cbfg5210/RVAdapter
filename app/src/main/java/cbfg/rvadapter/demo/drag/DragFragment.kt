@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_drag.*
 
 class DragFragment : Fragment(R.layout.fragment_drag), View.OnClickListener {
     private lateinit var adapter: RVAdapter<RankItem>
-    private lateinit var dragHelper: DragHelper<RankItem>
+    private lateinit var dragHelper: DragHelper
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -24,6 +24,7 @@ class DragFragment : Fragment(R.layout.fragment_drag), View.OnClickListener {
 
         dragHelper = DragHelper(adapter)
         dragHelper.bindRecyclerView(rvTest)
+        dragHelper.setDragBgRes(0, R.color.lightGray)
 
         btnLinear.setOnClickListener(this)
         btnGrid.setOnClickListener(this)

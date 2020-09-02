@@ -1,6 +1,7 @@
 package cbfg.rvadapter.demo.drag
 
 import android.graphics.Color
+import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +13,7 @@ import java.util.*
  * 添加时间: 2020/9/2 15:15
  * 功能描述: 拖拽方法封装
  */
-class DragHelper<T : Any>(private val adapter: RVAdapter<T>) {
+class DragHelper(private val adapter: RVAdapter<out Any>) {
     private val itemTouchCallback = object : ItemTouchHelper.Callback() {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
 
@@ -20,7 +21,7 @@ class DragHelper<T : Any>(private val adapter: RVAdapter<T>) {
             super.onSelectedChanged(viewHolder, actionState)
             if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
                 viewHolder ?: return
-                viewHolder.itemView.setBackgroundColor(Color.LTGRAY)
+                viewHolder.itemView.setBackgroundResource(dragBgRes)
             }
         }
 
@@ -53,7 +54,7 @@ class DragHelper<T : Any>(private val adapter: RVAdapter<T>) {
 
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
-            viewHolder.itemView.setBackgroundColor(0)
+            viewHolder.itemView.setBackgroundColor(normalBgRes)
         }
 
         override fun isLongPressDragEnabled(): Boolean {
@@ -63,6 +64,17 @@ class DragHelper<T : Any>(private val adapter: RVAdapter<T>) {
 
     private val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
     private var draggable = true
+
+    @DrawableRes
+    private var normalBgRes: Int = 0
+
+    @DrawableRes
+    private var dragBgRes: Int = 0
+
+    fun setDragBgRes(@DrawableRes normalBgRes: Int, @DrawableRes dragBgRes: Int) {
+        this.normalBgRes = normalBgRes
+        this.dragBgRes = dragBgRes
+    }
 
     fun bindRecyclerView(rv: RecyclerView) {
         itemTouchHelper.attachToRecyclerView(rv)
