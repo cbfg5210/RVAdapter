@@ -29,29 +29,11 @@ class StateVHFactory : RVHolderFactory() {
         viewType: Int,
         item: Any
     ): RVHolder<out Any> {
-        item as RVState
-        return when (item.state) {
-            RVState.State.LOADING -> LoadingVHolder(
-                inflater.inflate(
-                    R.layout.layout_state_loading,
-                    parent,
-                    false
-                )
-            )
-            RVState.State.EMPTY -> EmptyVHolder(
-                inflater.inflate(
-                    R.layout.layout_state_empty,
-                    parent,
-                    false
-                )
-            )
-            RVState.State.ERROR -> ErrorVHolder(
-                inflater.inflate(
-                    R.layout.layout_state_error,
-                    parent,
-                    false
-                )
-            )
+        val itemView = inflater.inflate(viewType, parent, false)
+        return when (viewType) {
+            R.layout.layout_state_loading -> LoadingVHolder(itemView)
+            R.layout.layout_state_empty -> EmptyVHolder(itemView)
+            else -> ErrorVHolder(itemView)
         }
     }
 
