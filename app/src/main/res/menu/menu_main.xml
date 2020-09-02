@@ -25,6 +25,9 @@
         android:id="@+id/actionState"
         android:title="State" />
     <item
+        android:id="@+id/actionDiff"
+        android:title="Diff" />
+    <item
         android:id="@+id/actionLifecycle"
         android:title="Select - lifecycle" />
 </menu>
