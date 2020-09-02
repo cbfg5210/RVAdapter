@@ -28,9 +28,11 @@ class SimpleFragment : Fragment(R.layout.fragment_list_common) {
                  * 点击头像
                  */
                 if (v.id == R.id.ivAvatar) {
-                    item.name = "${System.currentTimeMillis()}"
-                    adapter.notifyItemChanged(position, 1)
-                    return@setItemClickListener
+                    Toast.makeText(
+                        view.context,
+                        "click avatar ${item.name} - $position",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 /**
                  * 点击 item
