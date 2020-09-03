@@ -32,5 +32,5 @@
         android:title="Drag" />
     <item
         android:id="@+id/actionLifecycle"
-        android:title="Select - lifecycle" />
+        android:title="Lifecycle" />
 </menu>
