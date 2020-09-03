@@ -24,7 +24,11 @@ class SimpleFragment : Fragment(R.layout.fragment_list_simple), View.OnClickList
 
         adapter = RVAdapter<Person>(view.context, SimpleVHFactory())
             .bindRecyclerView(rvTest)
-            .setItems(DataHelper.getPeople())
+            .setItems(
+                DataHelper.getPeople(),
+                clearSelections = false,
+                needNotify = false
+            )
             .setItemClickListener { v, item, position ->
                 /**
                  * 点击头像
