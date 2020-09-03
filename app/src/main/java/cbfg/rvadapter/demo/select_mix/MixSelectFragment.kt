@@ -33,7 +33,6 @@ class MixSelectFragment : Fragment(R.layout.fragment_list_select_mix) {
                 //不可选
                 R.id.rbNoSelection -> {
                     adapter.setSelectable(false)
-                    hideCbToggleSelectAll()
                     showSelectedItems()
                 }
                 //单选
@@ -42,7 +41,6 @@ class MixSelectFragment : Fragment(R.layout.fragment_list_select_mix) {
                         RankItem::class.java,
                         SelectStrategy.SINGLE_SELECTABLE
                     )
-                    hideCbToggleSelectAll()
                     showSelectedItems()
                 }
                 //多选
@@ -51,29 +49,25 @@ class MixSelectFragment : Fragment(R.layout.fragment_list_select_mix) {
                         RankItem::class.java,
                         SelectStrategy.MULTI_SELECTABLE
                     )
-                    showCbToggleSelectAll()
                     showSelectedItems()
                 }
             }
         }
-    }
 
-    private fun hideCbToggleSelectAll() {
-        cbToggleSelectAll.visibility = View.GONE
-        cbToggleSelectAll.setOnCheckedChangeListener(null)
+        showCbToggleSelectAll()
     }
 
     private fun showCbToggleSelectAll() {
-        cbToggleSelectAll.visibility = View.VISIBLE
+        val normalText = "全选(单选类型如果多选会 crash)"
         cbToggleSelectAll.isChecked = false
-        cbToggleSelectAll.text = "全选"
+        cbToggleSelectAll.text = normalText
 
         cbToggleSelectAll.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 cbToggleSelectAll.text = "全不选"
                 adapter.selectAll()
             } else {
-                cbToggleSelectAll.text = "全选"
+                cbToggleSelectAll.text = normalText
                 adapter.deselectAll()
             }
             showSelectedItems()
