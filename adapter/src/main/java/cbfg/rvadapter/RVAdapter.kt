@@ -315,8 +315,8 @@ class RVAdapter<T : Any>(
             val mapList = list.groupBy { it.javaClass }
             for ((clazz, mList) in mapList) {
                 require(isSelectable(clazz)) { TIP_SELECT_DISABLED }
-                if (!getItemInfo(clazz).multiSelectable && mList.size > 1) {
-                    throw RuntimeException("'$clazz' 类型数据只能单选，不可以多选！")
+                if (!getItemInfo(clazz).multiSelectable) {
+                    require(mList.size == 1) { "'$clazz' 类型数据只能单选，不可以多选！" }
                 }
                 if (mList.size == 1) {
                     select(mList[0])
@@ -327,8 +327,8 @@ class RVAdapter<T : Any>(
         } else {
             val firstItem = list.first()
             require(isSelectable(firstItem.javaClass)) { TIP_SELECT_DISABLED }
-            if (!getItemInfo(firstItem.javaClass).multiSelectable && list.size > 1) {
-                throw RuntimeException("'${firstItem.javaClass}' 类型数据只能单选，不可以多选！")
+            if (!getItemInfo(firstItem.javaClass).multiSelectable) {
+                require(list.size == 1) { "'${firstItem.javaClass}' 类型数据只能单选，不可以多选！" }
             }
             if (list.size == 1) {
                 select(firstItem)
