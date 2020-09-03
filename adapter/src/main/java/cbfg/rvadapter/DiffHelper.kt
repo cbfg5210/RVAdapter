@@ -15,29 +15,31 @@ class DiffHelper<T : Any>(
 ) {
     private lateinit var newItems: List<T>
 
-    private val diffCallback = object : DiffUtil.Callback() {
-        override fun getOldListSize() = adapter.getRealItemCount()
-        override fun getNewListSize() = newItems.size
+    private val diffCallback: DiffUtil.Callback by lazy {
+        object : DiffUtil.Callback() {
+            override fun getOldListSize() = adapter.getRealItemCount()
+            override fun getNewListSize() = newItems.size
 
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return bDiffCallback.areItemsTheSame(
-                adapter.getItems()[oldItemPosition],
-                newItems[newItemPosition]
-            )
-        }
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return bDiffCallback.areItemsTheSame(
+                    adapter.getItems()[oldItemPosition],
+                    newItems[newItemPosition]
+                )
+            }
 
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return bDiffCallback.areContentsTheSame(
-                adapter.getItems()[oldItemPosition],
-                newItems[newItemPosition]
-            )
-        }
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return bDiffCallback.areContentsTheSame(
+                    adapter.getItems()[oldItemPosition],
+                    newItems[newItemPosition]
+                )
+            }
 
-        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-            return bDiffCallback.getChangePayload(
-                adapter.getItems()[oldItemPosition],
-                newItems[newItemPosition]
-            )
+            override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+                return bDiffCallback.getChangePayload(
+                    adapter.getItems()[oldItemPosition],
+                    newItems[newItemPosition]
+                )
+            }
         }
     }
 
