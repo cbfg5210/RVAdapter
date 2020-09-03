@@ -21,7 +21,7 @@ dependencies {
 ```
 
 ### 使用
-#### Step 1.继承 RVHolderFactory 实现抽象方法 createViewHolder
+#### Step 1. 继承 RVHolderFactory 并实现抽象方法 createViewHolder
 ```kotlin
 class SimpleVHFactory : RVHolderFactory() {
     override fun createViewHolder(
@@ -55,7 +55,7 @@ class SimpleVHFactory : RVHolderFactory() {
     }
 }
 ```
-#### Step 2.页面使用
+#### Step 2. 页面使用
 ```kotlin
 val adapter = RVAdapter<Person>(view.context, SimpleVHFactory())
         .bindRecyclerView(rvTest)
@@ -85,7 +85,16 @@ val adapter = RVAdapter<Person>(view.context, SimpleVHFactory())
 ```
 
 ### 直达 DEMO
-1.
+* [入门 Demo](https://gitee.com/cbfg5210/RVAdapter/blob/master/app/src/main/java/cbfg/rvadapter/demo/simple/SimpleFragment.kt)
+* [多 ViewType Demo](https://gitee.com/cbfg5210/RVAdapter/blob/master/app/src/main/java/cbfg/rvadapter/demo/multi_view_type/MultiViewTypeFragment.kt)
+* [单选 Demo](https://gitee.com/cbfg5210/RVAdapter/blob/master/app/src/main/java/cbfg/rvadapter/demo/select_single/SingleSelectFragment.kt)
+* [多选 Demo](https://gitee.com/cbfg5210/RVAdapter/blob/master/app/src/main/java/cbfg/rvadapter/demo/select_multi/MultiSelectFragment.kt)
+* [混合选择 Demo](https://gitee.com/cbfg5210/RVAdapter/blob/master/app/src/main/java/cbfg/rvadapter/demo/select_mix/MixSelectFragment.kt)
+* [略复杂的多选 Demo](https://gitee.com/cbfg5210/RVAdapter/blob/master/app/src/main/java/cbfg/rvadapter/demo/select_complex/ComplexFragment.kt)
+* [状态页 Demo](https://gitee.com/cbfg5210/RVAdapter/blob/master/app/src/main/java/cbfg/rvadapter/demo/state/StateFragment.kt)
+* [Diff 更新数据 Demo](https://gitee.com/cbfg5210/RVAdapter/blob/master/app/src/main/java/cbfg/rvadapter/demo/diff/DiffFragment.kt)
+* [拖拽排序 Demo](https://gitee.com/cbfg5210/RVAdapter/blob/master/app/src/main/java/cbfg/rvadapter/demo/drag/DragFragment.kt)
+* [生命周期事件处理 Demo](https://gitee.com/cbfg5210/RVAdapter/blob/master/app/src/main/java/cbfg/rvadapter/demo/lifecycle/LifecycleFragment.kt)
 
 ### API 一览
 ```kotlin
