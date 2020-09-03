@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.item_person.view.*
  * 添加时间: 2020/8/26 16:18
  * 功能描述:
  */
-@Suppress("UNCHECKED_CAST")
 class SimpleVHFactory : RVHolderFactory() {
     override fun createViewHolder(
         parent: ViewGroup?,

@@ -27,7 +27,10 @@ abstract class RVHolderFactory {
     open fun getItemViewType(item: Any) = -1
 
     /**
-     * 供 [RecyclerView.Adapter.onCreateViewHolder] 调用
+     * 供 [RecyclerView.Adapter.onCreateViewHolder] 调用，
+     * 如果通过 [getItemViewType] 自定义了 viewType 的话，
+     * 则根据 @param [viewType] 来创建对应 ViewHolder，
+     * 反之则根据 item 类型来创建对应的 ViewHolder
      */
     abstract fun createViewHolder(
         parent: ViewGroup?,
