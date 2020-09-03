@@ -1,7 +1,19 @@
 # RVAdapter
 [![](https://jitpack.io/v/com.gitee.cbfg5210/RVAdapter.svg)](https://jitpack.io/#com.gitee.cbfg5210/RVAdapter)
 
-之前虽然有封装过 RecyclerView.Adapter，但是在使用过程中发现了很多问题，于是就有了这次的重新封装。
+本库基于 [https://github.com/cbfg5210/BRecyclerAdapter](https://github.com/cbfg5210/BRecyclerAdapter) 进行了重新封装，对原有的代码逻辑缺陷进行了修复，并改善了使用方式。比如：
+* 【旧】使用了 List 来保存选中项，容易导致重复保存相同 item    【新】使用 Set 来保存，确保无重复 item
+* 【旧】对数据操作后需要手动调用刷新    【新】数据操作后自动刷新
+* 【旧】返回的列表数据是 MutableList，容易被篡改    【新】返回 List 类型，操作闭环
+* 【旧】没有提供选中 item 的 api，需要获取选中列表自行添加/移除选中项，不方便并且容易出错  【新】提供了系列 api
+* 【旧】BRecyclerAdapter 中的代码臃肿，可以独立出来的没有独立出来    【新】该独立能独立的代码独立出来
+* 【旧】状态页支持不完全，不能动态修改内容，不能设置点击事件    【新】完全支持自定义状态页及修改其内容以及设置点击事件
+
+读者可以通过对比二者源码直接体会其中优劣：
+* [BRecyclerAdapter【旧】](https://github.com/cbfg5210/BRecyclerAdapter/blob/master/adapter/src/main/java/com/adapter/BRecyclerAdapter.kt)
+* [RVAdapter【新】](https://gitee.com/cbfg5210/RVAdapter/blob/master/adapter/src/main/java/cbfg/rvadapter/RVAdapter.kt)
+
+接下来介绍一下新库的使用方法：
 
 ### 引入依赖
 #### Step 1. Add the JitPack repository to your build file
