@@ -465,12 +465,13 @@ class RVAdapter<T : Any>(
         val item = items[tempPosition]
         val holder = rvHolderFactory.createViewHolder(parent, viewType, item)
         holder.setListeners(
-            View.OnClickListener { onItemClick(holder, it, itemClickListener) },
-            View.OnLongClickListener {
-                onItemClick(holder, it, itemLongClickListener)
-                true
-            }
-        )
+            itemClickListener?.run { View.OnClickListener { onItemClick(holder, it, this) } },
+            itemLongClickListener?.run {
+                View.OnLongClickListener {
+                    onItemClick(holder, it, this)
+                    true
+                }
+            })
         return holder as RVHolder<Any>
     }
 
@@ -480,12 +481,9 @@ class RVAdapter<T : Any>(
         clicker: ((view: View, item: T, position: Int) -> Unit)?
     ) {
         val position = holder.adapterPosition
-        if (position < 0 || position >= items.size) {
-            return
+        if (position in 0 until items.size) {
+            clicker?.invoke(view, items[position], position)
         }
-        val item = items[position]
-        checkUpdateSelectionState(item, position)
-        clicker?.invoke(view, item, position)
     }
 
     /**
@@ -500,7 +498,7 @@ class RVAdapter<T : Any>(
      * 多选情况：
      * 如果已经选中则移除选中，否则选中
      */
-    private fun checkUpdateSelectionState(item: T, index: Int) {
+    fun toggleSelectionState(item: T, index: Int) {
         if (isSelectable(item.javaClass)) {
             if (!getItemInfo(item.javaClass).multiSelectable) {
                 select(item, index)

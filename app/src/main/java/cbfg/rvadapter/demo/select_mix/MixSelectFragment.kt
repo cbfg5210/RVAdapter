@@ -25,7 +25,10 @@ class MixSelectFragment : Fragment(R.layout.fragment_list_select_mix) {
                 needNotify = false
             )
             .setItems(getItems())
-            .setItemClickListener { _, _, _ -> showSelectedItems() }
+            .setItemClickListener { _, item, position ->
+                adapter.toggleSelectionState(item, position)
+                showSelectedItems()
+            }
 
         rgOptions.check(R.id.rbNoSelection)
         rgOptions.setOnCheckedChangeListener { _, checkedId ->

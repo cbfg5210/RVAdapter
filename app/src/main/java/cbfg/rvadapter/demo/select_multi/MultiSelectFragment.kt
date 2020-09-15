@@ -23,7 +23,10 @@ class MultiSelectFragment : Fragment(R.layout.fragment_list_select_multi) {
                 needNotify = false
             )
             .setItems(getItems())
-            .setItemClickListener { _, _, _ -> showSelectedItems() }
+            .setItemClickListener { _, item, position ->
+                adapter.toggleSelectionState(item, position)
+                showSelectedItems()
+            }
 
         cbToggleSelectAll.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {

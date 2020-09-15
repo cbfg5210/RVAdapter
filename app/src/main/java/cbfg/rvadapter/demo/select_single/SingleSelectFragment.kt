@@ -24,7 +24,10 @@ class SingleSelectFragment : Fragment(R.layout.fragment_list_select_single) {
                 needNotify = false
             )
             .setItems(getItems())
-            .setItemClickListener { _, _, _ -> showSelectedItem() }
+            .setItemClickListener { _, item, position ->
+                adapter.toggleSelectionState(item, position)
+                showSelectedItem()
+            }
             .also {
                 //这里默认选中第一项
                 it.selectAt(0)

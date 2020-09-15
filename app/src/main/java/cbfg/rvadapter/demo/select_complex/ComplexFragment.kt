@@ -32,6 +32,7 @@ class ComplexFragment : Fragment(R.layout.fragment_complex) {
             )
             .setItems(getItems())
             .setItemClickListener { _, item, position ->
+                adapter.toggleSelectionState(item, position)
                 if (item is ShopItem) {
                     onShopClick(item, position)
                 } else {
