@@ -136,29 +136,26 @@ class RVAdapter<T : Any>(
         clearItsSelections: Boolean = true,
         needNotify: Boolean = true
     ): RVAdapter<T> {
-        /**
-         * 更新 item 可选状态
-         */
-        getItemInfo(clazz).run {
-            if (strategy == SelectStrategy.UNSELECTABLE) {
-                this.selectable = false
-                this.multiSelectable = false
-            } else {
-                this.selectable = true
-                this.multiSelectable = strategy == SelectStrategy.MULTI_SELECTABLE
+        val itemInfo = getItemInfo(clazz)
+        if (strategy == SelectStrategy.UNSELECTABLE) {
+            //更新 item 可选状态
+            itemInfo.selectable = false
+            itemInfo.multiSelectable = false
+            //更新可选总开关
+            for ((_, it) in itemInfoMap) {
+                if (it.selectable) {
+                    this@RVAdapter.selectable = true
+                    break
+                }
             }
+        } else {
+            //更新 item 可选状态
+            itemInfo.selectable = true
+            itemInfo.multiSelectable = strategy == SelectStrategy.MULTI_SELECTABLE
+            //更新可选总开关
+            this@RVAdapter.selectable = true
         }
-        /**
-         * 更新可选总开关
-         */
-        var canSelect = false
-        for ((_, itemInfo) in itemInfoMap) {
-            if (itemInfo.selectable) {
-                canSelect = true
-                break
-            }
-        }
-        this.selectable = canSelect
+
         /**
          * 是否移除指定类型 item 选中项
          * 是否刷新数据
