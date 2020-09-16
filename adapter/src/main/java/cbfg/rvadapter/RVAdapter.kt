@@ -310,16 +310,8 @@ class RVAdapter<T : Any>(
         }
         if (strictCheck) {
             val mapList = list.groupBy { it.javaClass }
-            for ((clazz, mList) in mapList) {
-                require(isSelectable(clazz)) { TIP_SELECT_DISABLED }
-                if (!getItemInfo(clazz).multiSelectable) {
-                    require(mList.size == 1) { "'$clazz' 类型数据只能单选，不可以多选！" }
-                }
-                if (mList.size == 1) {
-                    select(mList[0])
-                } else {
-                    selections.addAll(mList)
-                }
+            for ((_, mList) in mapList) {
+                selectList(mList, false)
             }
         } else {
             val firstItem = list.first()
