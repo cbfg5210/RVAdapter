@@ -50,6 +50,7 @@ class RVAdapter<T : Any>(
     private var autoShowEmptyState = true
     private lateinit var stateHolderFactory: RVHolderFactory
     private var stateClickListener: ((view: View, item: Any, position: Int) -> Unit)? = null
+    private var stateLongClickListener: ((view: View, item: Any, position: Int) -> Unit)? = null
 
     init {
         rvHolderFactory.inflater = LayoutInflater.from(context)
@@ -70,8 +71,13 @@ class RVAdapter<T : Any>(
         return this
     }
 
-    fun setStateClickListener(listener: (view: View, item: Any, position: Int) -> Unit): RVAdapter<T> {
+    fun setStateClickListener(listener: ((view: View, item: Any, position: Int) -> Unit)): RVAdapter<T> {
         this.stateClickListener = listener
+        return this
+    }
+
+    fun setStateLongClickListener(listener: ((view: View, item: Any, position: Int) -> Unit)): RVAdapter<T> {
+        this.stateLongClickListener = listener
         return this
     }
 
@@ -440,14 +446,20 @@ class RVAdapter<T : Any>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RVHolder<Any> {
         if (items.isEmpty()) {
-            (normalState ?: emptyState)?.run {
+            val state = normalState ?: emptyState
+            if (state != null) {
                 val holder = stateHolderFactory.createViewHolder(parent, viewType, this)
-                holder.setListeners(View.OnClickListener {
-                    stateClickListener?.invoke(it, this, holder.adapterPosition)
-                }, View.OnLongClickListener {
-                    stateClickListener?.invoke(it, this, holder.adapterPosition)
-                    true
-                })
+                holder.setListeners(
+                    stateClickListener?.run {
+                        View.OnClickListener { this(it, state, holder.adapterPosition) }
+                    },
+                    stateLongClickListener?.run {
+                        View.OnLongClickListener {
+                            this(it, state, holder.adapterPosition)
+                            true
+                        }
+                    }
+                )
                 return holder as RVHolder<Any>
             }
         }
