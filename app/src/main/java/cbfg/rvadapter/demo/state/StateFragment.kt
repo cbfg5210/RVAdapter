@@ -39,6 +39,13 @@ class StateFragment : Fragment(R.layout.fragment_state), View.OnClickListener {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+            .setStateLongClickListener { _, item, position ->
+                Toast.makeText(
+                    view.context,
+                    "long click,item = $item,position = $position",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
     }
 
     override fun onClick(v: View) {
