@@ -20,7 +20,7 @@ class DiffFragment : Fragment(R.layout.fragment_diff), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = RVAdapter<RankItem>(view.context, DiffVHFactory())
-            .bindRecyclerView(rvTest)
+            .bind(rvTest)
             .setItems(getItems())
 
         diffHelper = DiffHelper(adapter, object : DiffHelper.BDiffCallback<RankItem> {

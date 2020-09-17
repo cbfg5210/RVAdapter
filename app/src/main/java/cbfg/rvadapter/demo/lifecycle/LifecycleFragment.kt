@@ -23,7 +23,7 @@ class LifecycleFragment : Fragment(R.layout.fragment_list_common) {
 
         val vhFactory = LifecycleVHFactory()
         adapter = RVAdapter<Person>(view.context, vhFactory)
-            .bindRecyclerView(rvList)
+            .bind(rvList)
             .setLifecycleHandler(vhFactory.getLifecycleHandler())
             .setItems(DataHelper.getPeople())
             .setItemClickListener { v, item, position ->

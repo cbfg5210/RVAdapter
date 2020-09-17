@@ -17,7 +17,7 @@ class MixSelectFragment : Fragment(R.layout.fragment_list_select_mix) {
 
         val vhFactory = MixSelectVHFactory(selectable = false, multiSelectable = false)
         adapter = RVAdapter<RankItem>(view.context, vhFactory)
-            .bindRecyclerView(rvTest)
+            .bind(rvTest)
             .setSelectable(
                 RankItem::class.java,
                 SelectStrategy.UNSELECTABLE,

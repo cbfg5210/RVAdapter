@@ -56,7 +56,7 @@ class RVAdapter<T : Any>(
         rvHolderFactory.inflater = LayoutInflater.from(context)
     }
 
-    fun bindRecyclerView(rv: RecyclerView): RVAdapter<T> {
+    fun bind(rv: RecyclerView): RVAdapter<T> {
         rv.adapter = this
         return this
     }

@@ -15,7 +15,7 @@ class SingleSelectFragment : Fragment(R.layout.fragment_list_select_single) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = RVAdapter<RankItem>(view.context, SingleSelectVHFactory())
-            .bindRecyclerView(rvTest)
+            .bind(rvTest)
             //设置指定类型数据可选
             .setSelectable(
                 RankItem::class.java,

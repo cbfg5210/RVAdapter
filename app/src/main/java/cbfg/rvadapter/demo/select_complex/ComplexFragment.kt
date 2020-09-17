@@ -17,7 +17,7 @@ class ComplexFragment : Fragment(R.layout.fragment_complex) {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = RVAdapter<Any>(view.context, ComplexVHFactory())
-            .bindRecyclerView(rvTest)
+            .bind(rvTest)
             .setSelectable(
                 ShopItem::class.java,
                 SelectStrategy.MULTI_SELECTABLE,

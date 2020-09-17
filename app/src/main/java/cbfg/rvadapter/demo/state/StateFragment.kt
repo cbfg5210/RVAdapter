@@ -29,7 +29,7 @@ class StateFragment : Fragment(R.layout.fragment_state), View.OnClickListener {
         btnClearData.setOnClickListener(this)
 
         adapter = RVAdapter<Person>(view.context, SimpleVHFactory())
-            .bindRecyclerView(rvList)
+            .bind(rvList)
             .setStateHolderFactory(StateVHFactory())
             //.setStateHolderFactory(StateVHFactory(), autoShowEmptyState = false)
             .setStateClickListener { _, item, position ->

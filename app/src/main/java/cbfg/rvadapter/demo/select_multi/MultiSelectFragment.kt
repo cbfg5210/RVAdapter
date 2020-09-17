@@ -16,7 +16,7 @@ class MultiSelectFragment : Fragment(R.layout.fragment_list_select_multi) {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = RVAdapter<RankItem>(view.context, MultiSelectVHFactory())
-            .bindRecyclerView(rvTest)
+            .bind(rvTest)
             .setSelectable(
                 RankItem::class.java, SelectStrategy.MULTI_SELECTABLE,
                 clearItsSelections = false,

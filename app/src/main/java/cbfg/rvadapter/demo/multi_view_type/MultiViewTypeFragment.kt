@@ -30,7 +30,7 @@ class MultiViewTypeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         RVAdapter<Any>(view.context, MultiViewTypeVHFactory())
-            .bindRecyclerView(rvList)
+            .bind(rvList)
             .setItems(DataHelper.getClassifiedPeople())
             .setItemClickListener { _, item, position ->
                 if (item is Header) {

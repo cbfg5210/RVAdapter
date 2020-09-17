@@ -23,7 +23,7 @@ class SimpleFragment : Fragment(R.layout.fragment_list_simple), View.OnClickList
         super.onViewCreated(view, savedInstanceState)
 
         adapter = RVAdapter<Person>(view.context, SimpleVHFactory())
-            .bindRecyclerView(rvTest)
+            .bind(rvTest)
             .setItems(
                 DataHelper.getPeople(),
                 clearSelections = false,

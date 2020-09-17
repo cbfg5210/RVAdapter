@@ -19,7 +19,7 @@ class DragFragment : Fragment(R.layout.fragment_drag), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = RVAdapter<RankItem>(view.context, DragVHFactory())
-            .bindRecyclerView(rvTest)
+            .bind(rvTest)
             .setItems(getItems())
 
         dragHelper = DragHelper(adapter)
