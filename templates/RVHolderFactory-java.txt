@@ -1,0 +1,43 @@
+#if (${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
+
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import cbfg.rvadapter.RVHolder;
+import cbfg.rvadapter.RVHolderFactory;
+
+#parse("File Header.java")
+public class ${NAME}VHFactory extends RVHolderFactory{
+    /*
+    // Demo：
+    RVAdapter<${NAME}> adapter = new RVAdapter<${NAME}>(getContext(), new ${NAME}VHFactory())
+            .bind(recyclerView)
+            .setItemClickListener(((view, item, position) -> {
+            }));
+    */
+
+    @Override
+    public RVHolder<Object> createViewHolder(@Nullable ViewGroup parent, int viewType, @NonNull Object item) {
+        return new ${NAME}VH(inflate(R.layout.item_xxx, parent));
+    }
+
+    final class ${NAME}VH extends RVHolder<${NAME}> {
+
+        ${NAME}VH(View itemView) {
+            super(itemView);
+
+        }
+
+        @Override
+        public void setContent(@NonNull ${NAME} item, boolean isSelected, Object payload) {
+        }
+
+        @Override
+        public void setListeners(@Nullable View.OnClickListener itemClickListener, @Nullable View.OnLongClickListener itemLongClickListener) {
+            super.setListeners(itemClickListener, itemLongClickListener);
+        }
+    }
+}

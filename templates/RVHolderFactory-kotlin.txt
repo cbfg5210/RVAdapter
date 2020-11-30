@@ -1,0 +1,38 @@
+#if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME}#end
+
+import android.view.View
+import android.view.ViewGroup
+import cbfg.rvadapter.RVHolder
+import cbfg.rvadapter.RVHolderFactory
+
+#parse("File Header.java")
+class ${NAME}VHFactory : RVHolderFactory() {
+    /*
+    // Demo：
+    val adapter = RVAdapter<${NAME}>(context, ${NAME}VHFactory())
+        .bind(recyclerView)
+        .setItemClickListener{ v, item, position -> {
+        }
+    */
+
+    override fun createViewHolder(
+        parent: ViewGroup?,
+        viewType: Int,
+        item: Any
+    ): RVHolder<out Any> {
+        return ${NAME}VH(inflate(R.layout.item_xxx, parent))
+    }
+
+     private class ${NAME}VH(itemView: View) : RVHolder<${NAME}>(itemView) {
+
+        override fun setContent(item: ${NAME}, isSelected: Boolean, payload: Any?) {
+        }
+
+         override fun setListeners(
+            itemClickListener: View.OnClickListener?,
+            itemLongClickListener: View.OnLongClickListener?
+        ) {
+            super.setListeners(itemClickListener, itemLongClickListener)
+        }
+    }
+}
