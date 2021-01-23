@@ -1,6 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext.kotlin_version = "1.4.21"
+    apply from: 'local.gradle'
+
     repositories {
         google()
         jcenter()
@@ -17,8 +19,17 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url localMavenPath }
         google()
         jcenter()
+    }
+}
+
+subprojects { subProject ->
+    //println("${subProject.name}")
+    //println("${subProject.path}")
+    if (subProject.name != 'app') {
+        apply from: "uploadArchives.gradle"
     }
 }
 

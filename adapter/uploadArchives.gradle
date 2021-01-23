@@ -1,0 +1,13 @@
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: uri(localMavenPath))
+
+        String[] parts = RVAdapterDependency.split(":")
+
+        pom.groupId = parts[0]
+        pom.artifactId = parts[1]
+        pom.version = parts[2]
+    }
+}

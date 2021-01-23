@@ -1,0 +1,9 @@
+ext {
+    /**
+     * 是否是输出 aar 的模式，true 的话会使用本地 maven 的 aar 而不是模块，
+     * 要输出 aar 到本地的时候设为 true，否则设为 false
+     */
+    outputAAR = false
+    localMavenPath = "\\$rootDir\\output"
+    RVAdapterDependency = 'com.gitee.cbfg5210:RVAdapter:0.3.2'
+}
