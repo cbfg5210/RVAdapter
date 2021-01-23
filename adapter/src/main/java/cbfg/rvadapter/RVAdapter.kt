@@ -203,11 +203,11 @@ class RVAdapter<T : Any>(
         notifyItemInserted(index)
     }
 
-    fun add(list: List<T>) {
-        add(list.size, list)
+    fun addList(list: List<T>) {
+        addList(list.size, list)
     }
 
-    fun add(index: Int, list: List<T>) {
+    fun addList(index: Int, list: List<T>) {
         items.addAll(index, list)
         notifyItemRangeInserted(index, list.size)
     }
@@ -226,7 +226,7 @@ class RVAdapter<T : Any>(
         notifyItemRemoved(index)
     }
 
-    fun remove(list: Collection<T>) {
+    fun removeList(list: Collection<T>) {
         if (list.isNotEmpty()) {
             items.removeAll(list)
             selections.removeAll(list)
@@ -293,8 +293,8 @@ class RVAdapter<T : Any>(
     /**
      * @param strictCheck true：严格检查数据类型是否单选，如果单选并且选中多项则抛出异常
      */
-    fun select(list: Collection<T>, strictCheck: Boolean = false) {
-        selectList(list, strictCheck)
+    fun selectList(list: Collection<T>, strictCheck: Boolean = false) {
+        _selectList(list, strictCheck)
         notifyItemRangeChanged(0, items.size, FLAG_SELECTED)
     }
 
@@ -302,7 +302,7 @@ class RVAdapter<T : Any>(
      * @param strictCheck true：严格检查数据类型是否单选，如果单选并且选中多项则抛出异常
      */
     fun selectRange(fromIndex: Int, toIndex: Int, strictCheck: Boolean = false) {
-        selectList(items.subList(fromIndex, toIndex), strictCheck)
+        _selectList(items.subList(fromIndex, toIndex), strictCheck)
         notifyItemRangeChanged(fromIndex, toIndex - fromIndex, FLAG_SELECTED)
     }
 
@@ -310,14 +310,14 @@ class RVAdapter<T : Any>(
      * 多项选择
      * @param strictCheck true：严格检查是否违反单选原则，false：只检查第一项数据类型是否违反单选原则
      */
-    private fun selectList(list: Collection<T>, strictCheck: Boolean = false) {
+    private fun _selectList(list: Collection<T>, strictCheck: Boolean = false) {
         if (list.isEmpty()) {
             return
         }
         if (strictCheck) {
             val mapList = list.groupBy { it.javaClass }
             for ((_, mList) in mapList) {
-                selectList(mList, false)
+                _selectList(mList, false)
             }
         } else {
             val firstItem = list.first()
@@ -354,7 +354,7 @@ class RVAdapter<T : Any>(
     }
 
     fun selectAll(strictCheck: Boolean = false) {
-        select(items, strictCheck)
+        selectList(items, strictCheck)
     }
 
     fun deselectAt(index: Int) {
@@ -370,7 +370,7 @@ class RVAdapter<T : Any>(
         }
     }
 
-    fun deselect(list: Collection<T>) {
+    fun deselectList(list: Collection<T>) {
         if (selections.isNotEmpty()) {
             selections.removeAll(list)
             notifyItemRangeChanged(0, items.size, FLAG_DESELECTED)
