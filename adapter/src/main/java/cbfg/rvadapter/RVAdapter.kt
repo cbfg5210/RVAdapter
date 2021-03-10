@@ -204,7 +204,7 @@ class RVAdapter<T : Any>(
     }
 
     fun addList(list: List<T>) {
-        addList(list.size, list)
+        addList(items.size, list)
     }
 
     fun addList(index: Int, list: List<T>) {
