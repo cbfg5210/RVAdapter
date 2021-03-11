@@ -17,8 +17,13 @@ class SingleSelectFragment : Fragment(R.layout.fragment_list_select_single) {
         adapter = RVAdapter<RankItem>(view.context, SingleSelectVHFactory())
             .bind(rvTest)
             //设置指定类型数据可选
-            .setSelectable(
+            /*.setSelectable(
                 RankItem::class.java,
+                SelectStrategy.SINGLE_SELECTABLE,
+                clearItsSelections = false,
+                needNotify = false
+            )*/
+            .setSelectable<RankItem>(
                 SelectStrategy.SINGLE_SELECTABLE,
                 clearItsSelections = false,
                 needNotify = false

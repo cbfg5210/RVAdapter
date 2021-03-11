@@ -136,6 +136,17 @@ class RVAdapter<T : Any>(
      * @param clearItsSelections true：清空该数据类型的选中项
      * @param needNotify true：刷新
      */
+    inline fun <reified B> setSelectable(
+        strategy: SelectStrategy,
+        clearItsSelections: Boolean = true,
+        needNotify: Boolean = true
+    ) = setSelectable(B::class.java, strategy, clearItsSelections, needNotify)
+
+    /**
+     * 某数据类型 item 是否可选开关
+     * @param clearItsSelections true：清空该数据类型的选中项
+     * @param needNotify true：刷新
+     */
     fun setSelectable(
         clazz: Class<*>,
         strategy: SelectStrategy,
