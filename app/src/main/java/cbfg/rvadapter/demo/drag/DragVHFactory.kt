@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
 import cbfg.rvadapter.demo.R
+import cbfg.rvadapter.demo.databinding.ItemDiffBinding
 import cbfg.rvadapter.entity.RankItem
-import kotlinx.android.synthetic.main.item_diff.view.*
 
 /**
  * 添加人：  Tom Hawk
@@ -29,11 +29,10 @@ class DragVHFactory : RVHolderFactory() {
     }
 
     private class RankItemVH(itemView: View) : RVHolder<RankItem>(itemView) {
-        private val tvRank = itemView.tvRank
-        private val ivIcon = itemView.ivIcon
+        private val binding = ItemDiffBinding.bind(itemView)
         override fun setContent(item: RankItem, isSelected: Boolean, payload: Any?) {
-            tvRank.text = item.rank.toString()
-            ivIcon.setImageResource(R.mipmap.ic_launcher)
+            binding.tvRank.text = item.rank.toString()
+            binding.ivIcon.setImageResource(R.mipmap.ic_launcher)
         }
     }
 }

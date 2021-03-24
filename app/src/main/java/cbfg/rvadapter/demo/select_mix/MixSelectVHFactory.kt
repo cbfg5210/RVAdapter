@@ -4,8 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import cbfg.rvadapter.*
 import cbfg.rvadapter.demo.R
+import cbfg.rvadapter.demo.databinding.ItemSelectMixBinding
 import cbfg.rvadapter.entity.RankItem
-import kotlinx.android.synthetic.main.item_select_mix.view.*
 
 /**
  * 添加人：  Tom Hawk
@@ -30,21 +30,22 @@ class MixSelectVHFactory(
     }
 
     private inner class RankItemVH(itemView: View) : RVHolder<RankItem>(itemView) {
+        private val binding = ItemSelectMixBinding.bind(itemView)
 
         override fun setContent(item: RankItem, isSelected: Boolean, payload: Any?) {
             if (payload != null) {
                 handlePayload(isSelected, payload)
             } else {
-                itemView.ivIcon.setImageResource(R.mipmap.ic_launcher)
-                itemView.tvRank.text = item.rank.toString()
+                binding.ivIcon.setImageResource(R.mipmap.ic_launcher)
+                binding.tvRank.text = item.rank.toString()
 
                 updateSelectableState(selectable, multiSelectable)
 
                 if (selectable) {
                     if (multiSelectable) {
-                        itemView.cbSelect.isChecked = isSelected
+                        binding.cbSelect.isChecked = isSelected
                     } else {
-                        itemView.rbSelect.isChecked = isSelected
+                        binding.rbSelect.isChecked = isSelected
                     }
                 }
             }
@@ -57,7 +58,7 @@ class MixSelectVHFactory(
                 }
                 RVAdapter.FLAG_SELECTABLE -> {
                     updateSelectableState(mSelectable = true, mMultiSelectable = false)
-                    itemView.rbSelect.isChecked = isSelected
+                    binding.rbSelect.isChecked = isSelected
                 }
                 is ItemEvent -> {
                     when (payload.obj) {
@@ -66,26 +67,26 @@ class MixSelectVHFactory(
                         }
                         SelectStrategy.SINGLE_SELECTABLE -> {
                             updateSelectableState(mSelectable = true, mMultiSelectable = false)
-                            itemView.rbSelect.isChecked = isSelected
+                            binding.rbSelect.isChecked = isSelected
                         }
                         else -> {
                             updateSelectableState(mSelectable = true, mMultiSelectable = true)
-                            itemView.cbSelect.isChecked = isSelected
+                            binding.cbSelect.isChecked = isSelected
                         }
                     }
                 }
                 RVAdapter.FLAG_SELECTED -> {
                     if (multiSelectable) {
-                        itemView.cbSelect.isChecked = true
+                        binding.cbSelect.isChecked = true
                     } else {
-                        itemView.rbSelect.isChecked = true
+                        binding.rbSelect.isChecked = true
                     }
                 }
                 RVAdapter.FLAG_DESELECTED -> {
                     if (multiSelectable) {
-                        itemView.cbSelect.isChecked = false
+                        binding.cbSelect.isChecked = false
                     } else {
-                        itemView.rbSelect.isChecked = false
+                        binding.rbSelect.isChecked = false
                     }
                 }
             }
@@ -98,14 +99,14 @@ class MixSelectVHFactory(
             selectable = mSelectable
             multiSelectable = mMultiSelectable
             if (!selectable) {
-                itemView.rbSelect.visibility = View.GONE
-                itemView.cbSelect.visibility = View.GONE
+                binding.rbSelect.visibility = View.GONE
+                binding.cbSelect.visibility = View.GONE
             } else if (multiSelectable) {
-                itemView.rbSelect.visibility = View.GONE
-                itemView.cbSelect.visibility = View.VISIBLE
+                binding.rbSelect.visibility = View.GONE
+                binding.cbSelect.visibility = View.VISIBLE
             } else {
-                itemView.rbSelect.visibility = View.VISIBLE
-                itemView.cbSelect.visibility = View.GONE
+                binding.rbSelect.visibility = View.VISIBLE
+                binding.cbSelect.visibility = View.GONE
             }
         }
     }

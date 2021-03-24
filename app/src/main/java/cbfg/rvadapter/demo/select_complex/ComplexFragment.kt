@@ -1,23 +1,38 @@
 package cbfg.rvadapter.demo.select_complex
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cbfg.rvadapter.RVAdapter
 import cbfg.rvadapter.SelectStrategy
 import cbfg.rvadapter.demo.R
+import cbfg.rvadapter.demo.databinding.FragmentComplexBinding
 import cbfg.rvadapter.entity.CommodityItem
 import cbfg.rvadapter.entity.ShopItem
-import kotlinx.android.synthetic.main.fragment_complex.*
 
 class ComplexFragment : Fragment(R.layout.fragment_complex) {
+    private var _binding: FragmentComplexBinding? = null
+    private val binding: FragmentComplexBinding
+        get() = _binding!!
+
     private lateinit var adapter: RVAdapter<Any>
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentComplexBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = RVAdapter<Any>(view.context, ComplexVHFactory())
-            .bind(rvTest)
+            .bind(binding.rvTest)
             .setSelectable(
                 ShopItem::class.java,
                 SelectStrategy.MULTI_SELECTABLE,
@@ -123,7 +138,7 @@ class ComplexFragment : Fragment(R.layout.fragment_complex) {
                 count += selection.price
             }
         }
-        tvCount.text = String.format("总计：¥ %.2f", count)
+        binding.tvCount.text = String.format("总计：¥ %.2f", count)
     }
 
     private fun getItems(): List<Any> {
@@ -140,5 +155,10 @@ class ComplexFragment : Fragment(R.layout.fragment_complex) {
             CommodityItem(R.mipmap.ic_launcher, "毛毛虫童鞋", 79.9F),
             CommodityItem(R.mipmap.ic_launcher, "花生酥516g", 32.8F)
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -2,10 +2,12 @@ package cbfg.rvadapter.demo.state
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
 import cbfg.rvadapter.demo.R
-import kotlinx.android.synthetic.main.layout_state_empty.view.*
+import cbfg.rvadapter.demo.databinding.LayoutStateLoadingBinding
 
 /**
  * @author:  Tom Hawk
@@ -33,10 +35,10 @@ class StateVHFactory : RVHolderFactory() {
     }
 
     private class LoadingVHolder(itemView: View) : RVHolder<RVState>(itemView) {
-        private val tvTip = itemView.tvTip
+        private val binding = LayoutStateLoadingBinding.bind(itemView)
 
         override fun setContent(item: RVState, isSelected: Boolean, payload: Any?) {
-            tvTip.text = item.tip
+            binding.tvTip.text = item.tip
         }
 
         override fun setListeners(
@@ -48,8 +50,8 @@ class StateVHFactory : RVHolderFactory() {
     }
 
     private class NormalVHolder(itemView: View) : RVHolder<RVState>(itemView) {
-        private val tvTip = itemView.tvTip
-        private val ivImg = itemView.ivImg
+        private val tvTip = itemView.findViewById<TextView>(R.id.tvTip)
+        private val ivImg = itemView.findViewById<ImageView>(R.id.ivImg)
         override fun setContent(item: RVState, isSelected: Boolean, payload: Any?) {
             ivImg.setImageResource(item.imgSrc)
             tvTip.text = item.tip

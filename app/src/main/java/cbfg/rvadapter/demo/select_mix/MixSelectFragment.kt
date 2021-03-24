@@ -1,23 +1,38 @@
 package cbfg.rvadapter.demo.select_mix
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cbfg.rvadapter.RVAdapter
 import cbfg.rvadapter.SelectStrategy
 import cbfg.rvadapter.demo.R
+import cbfg.rvadapter.demo.databinding.FragmentListSelectMixBinding
 import cbfg.rvadapter.entity.RankItem
-import kotlinx.android.synthetic.main.fragment_list_select_mix.*
 
-class MixSelectFragment : Fragment(R.layout.fragment_list_select_mix) {
+class MixSelectFragment : Fragment() {
+    private var _binding: FragmentListSelectMixBinding? = null
+    private val binding: FragmentListSelectMixBinding
+        get() = _binding!!
+
     private lateinit var adapter: RVAdapter<RankItem>
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentListSelectMixBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val vhFactory = MixSelectVHFactory(selectable = false, multiSelectable = false)
         adapter = RVAdapter<RankItem>(view.context, vhFactory)
-            .bind(rvTest)
+            .bind(binding.rvTest)
             .setSelectable(
                 RankItem::class.java,
                 SelectStrategy.UNSELECTABLE,
@@ -30,8 +45,8 @@ class MixSelectFragment : Fragment(R.layout.fragment_list_select_mix) {
                 showSelectedItems()
             }
 
-        rgOptions.check(R.id.rbNoSelection)
-        rgOptions.setOnCheckedChangeListener { _, checkedId ->
+        binding.rgOptions.check(R.id.rbNoSelection)
+        binding.rgOptions.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 //不可选
                 R.id.rbNoSelection -> {
@@ -62,15 +77,15 @@ class MixSelectFragment : Fragment(R.layout.fragment_list_select_mix) {
 
     private fun showCbToggleSelectAll() {
         val normalText = "全选(单选类型如果多选会 crash)"
-        cbToggleSelectAll.isChecked = false
-        cbToggleSelectAll.text = normalText
+        binding.cbToggleSelectAll.isChecked = false
+        binding.cbToggleSelectAll.text = normalText
 
-        cbToggleSelectAll.setOnCheckedChangeListener { _, isChecked ->
+        binding.cbToggleSelectAll.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                cbToggleSelectAll.text = "全不选"
+                binding.cbToggleSelectAll.text = "全不选"
                 adapter.selectAll()
             } else {
-                cbToggleSelectAll.text = normalText
+                binding.cbToggleSelectAll.text = normalText
                 adapter.deselectAll()
             }
             showSelectedItems()
@@ -78,8 +93,8 @@ class MixSelectFragment : Fragment(R.layout.fragment_list_select_mix) {
     }
 
     private fun showSelectedItems() {
-        tvSelections.text = "选中的项: "
-        adapter.getSelections().forEach { tvSelections.append("rank-${it.rank},") }
+        binding.tvSelections.text = "选中的项: "
+        adapter.getSelections().forEach { binding.tvSelections.append("rank-${it.rank},") }
     }
 
     private fun getItems(): List<RankItem> {
@@ -88,5 +103,10 @@ class MixSelectFragment : Fragment(R.layout.fragment_list_select_mix) {
             items.add(RankItem(i, i))
         }
         return items
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

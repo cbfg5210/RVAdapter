@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
 import cbfg.rvadapter.demo.R
+import cbfg.rvadapter.demo.databinding.ItemComplexCommodityBinding
+import cbfg.rvadapter.demo.databinding.ItemComplexShopBinding
 import cbfg.rvadapter.entity.CommodityItem
 import cbfg.rvadapter.entity.ShopItem
-import kotlinx.android.synthetic.main.item_complex_commodity.view.*
-import kotlinx.android.synthetic.main.item_complex_shop.view.*
 
 /**
  * 添加人：  Tom Hawk
@@ -34,15 +34,13 @@ class ComplexVHFactory : RVHolderFactory() {
      * 商店 ViewHolder
      */
     private class ShopItemVH(itemView: View) : RVHolder<ShopItem>(itemView) {
-        private val cbToggleSelectAll = itemView.cbToggleSelectAll
-        private val ivShopImage = itemView.ivShopImage
-        private val tvShopName = itemView.tvShopName
+        private val binding = ItemComplexShopBinding.bind(itemView)
 
         override fun setContent(item: ShopItem, isSelected: Boolean, payload: Any?) {
-            cbToggleSelectAll.isChecked = isSelected
+            binding.cbToggleSelectAll.isChecked = isSelected
             if (payload == null) {
-                ivShopImage.setImageResource(item.image)
-                tvShopName.text = item.name
+                binding.ivShopImage.setImageResource(item.image)
+                binding.tvShopName.text = item.name
             }
         }
     }
@@ -51,18 +49,15 @@ class ComplexVHFactory : RVHolderFactory() {
      * 商品 ViewHolder
      */
     private class CommodityItemVH(itemView: View) : RVHolder<CommodityItem>(itemView) {
-        private val cbSelect = itemView.cbSelect
-        private val ivImage = itemView.ivImage
-        private val tvName = itemView.tvName
-        private val tvPrice = itemView.tvPrice
+        private val binding = ItemComplexCommodityBinding.bind(itemView)
 
         override fun setContent(item: CommodityItem, isSelected: Boolean, payload: Any?) {
             itemView.isSelected = isSelected
-            cbSelect.isChecked = isSelected
+            binding.cbSelect.isChecked = isSelected
             if (payload == null) {
-                ivImage.setImageResource(item.image)
-                tvName.text = item.name
-                tvPrice.text = "¥ ${String.format("%.2f", item.price)}"
+                binding.ivImage.setImageResource(item.image)
+                binding.tvName.text = item.name
+                binding.tvPrice.text = "¥ ${String.format("%.2f", item.price)}"
             }
         }
     }

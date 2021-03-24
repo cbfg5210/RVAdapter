@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
 import cbfg.rvadapter.demo.R
+import cbfg.rvadapter.demo.databinding.ItemSelectSingleBinding
 import cbfg.rvadapter.entity.RankItem
-import kotlinx.android.synthetic.main.item_select_single.view.*
 
 /**
  * 添加人：  Tom Hawk
@@ -28,16 +28,14 @@ class SingleSelectVHFactory : RVHolderFactory() {
     )
 
     private class RankItemVH(itemView: View) : RVHolder<RankItem>(itemView) {
-        private val rbSelect = itemView.rbSelect
-        private val ivIcon = itemView.ivIcon
-        private val tvRank = itemView.tvRank
+        private val binding = ItemSelectSingleBinding.bind(itemView)
 
         override fun setContent(item: RankItem, isSelected: Boolean, payload: Any?) {
             //Log.e("*****", "payload = $payload")
-            rbSelect.isChecked = isSelected
+            binding.rbSelect.isChecked = isSelected
             if (payload == null) {
-                ivIcon.setImageResource(R.mipmap.ic_launcher)
-                tvRank.text = item.rank.toString()
+                binding.ivIcon.setImageResource(R.mipmap.ic_launcher)
+                binding.tvRank.text = item.rank.toString()
             }
         }
     }

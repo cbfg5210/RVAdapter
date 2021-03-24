@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
 import cbfg.rvadapter.demo.R
+import cbfg.rvadapter.demo.databinding.ItemPersonBinding
 import cbfg.rvadapter.entity.Person
-import kotlinx.android.synthetic.main.item_person.view.*
 
 /**
  * @author:  Tom Hawk
@@ -24,13 +24,12 @@ class SimpleVHFactory : RVHolderFactory() {
     }
 
     private class PersonVH(itemView: View) : RVHolder<Person>(itemView) {
-        private val ivAvatar = itemView.ivAvatar
-        private val tvName = itemView.tvName
+        private val binding = ItemPersonBinding.bind(itemView)
 
         @SuppressLint("SetTextI18n")
         override fun setContent(item: Person, isSelected: Boolean, payload: Any?) {
-            ivAvatar.setImageResource(item.avatar)
-            tvName.text = "${item.name} - $adapterPosition"
+            binding.ivAvatar.setImageResource(item.avatar)
+            binding.tvName.text = "${item.name} - $adapterPosition"
         }
 
         override fun setListeners(
@@ -41,7 +40,7 @@ class SimpleVHFactory : RVHolderFactory() {
              * 这里除了 item 设置点击/长按事件外，也给头像设置点击事件
              */
             super.setListeners(itemClickListener, itemLongClickListener)
-            ivAvatar.setOnClickListener(itemClickListener)
+            binding.ivAvatar.setOnClickListener(itemClickListener)
         }
     }
 }

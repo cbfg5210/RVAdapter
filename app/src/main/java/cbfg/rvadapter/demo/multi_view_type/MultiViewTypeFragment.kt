@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import cbfg.rvadapter.DataHelper
-import cbfg.rvadapter.demo.R
 import cbfg.rvadapter.RVAdapter
+import cbfg.rvadapter.demo.databinding.FragmentListCommonBinding
 import cbfg.rvadapter.entity.Header
 import cbfg.rvadapter.entity.Person
-import kotlinx.android.synthetic.main.fragment_list_common.*
 
 /**
  * @author:  Tom Hawk
@@ -19,18 +18,23 @@ import kotlinx.android.synthetic.main.fragment_list_common.*
  * 功能描述:
  */
 class MultiViewTypeFragment : Fragment() {
+    private var _binding: FragmentListCommonBinding? = null
+    private val binding: FragmentListCommonBinding
+        get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_list_common, container, false)
+    ): View {
+        _binding = FragmentListCommonBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         RVAdapter<Any>(view.context, MultiViewTypeVHFactory())
-            .bind(rvList)
+            .bind(binding.rvList)
             .setItems(DataHelper.getClassifiedPeople())
             .setItemClickListener { _, item, position ->
                 if (item is Header) {
@@ -48,5 +52,10 @@ class MultiViewTypeFragment : Fragment() {
                     ).show()
                 }
             }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

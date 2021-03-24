@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import cbfg.rvadapter.RVHolder
 import cbfg.rvadapter.RVHolderFactory
 import cbfg.rvadapter.demo.R
+import cbfg.rvadapter.demo.databinding.ItemSelectMultiBinding
 import cbfg.rvadapter.entity.RankItem
-import kotlinx.android.synthetic.main.item_select_multi.view.*
 
 /**
  * 添加人：  Tom Hawk
@@ -26,15 +26,13 @@ class MultiSelectVHFactory : RVHolderFactory() {
     ): RVHolder<out Any> = RankItemVH(inflate(R.layout.item_select_multi, parent))
 
     private class RankItemVH(itemView: View) : RVHolder<RankItem>(itemView) {
-        private val cbSelect = itemView.cbSelect
-        private val ivIcon = itemView.ivIcon
-        private val tvRank = itemView.tvRank
+        private val binding = ItemSelectMultiBinding.bind(itemView)
 
         override fun setContent(item: RankItem, isSelected: Boolean, payload: Any?) {
-            cbSelect.isChecked = isSelected
+            binding.cbSelect.isChecked = isSelected
             if (payload == null) {
-                ivIcon.setImageResource(R.mipmap.ic_launcher)
-                tvRank.text = item.rank.toString()
+                binding.ivIcon.setImageResource(R.mipmap.ic_launcher)
+                binding.tvRank.text = item.rank.toString()
             }
         }
     }

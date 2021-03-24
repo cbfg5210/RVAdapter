@@ -1,36 +1,51 @@
 package cbfg.rvadapter.demo.drag
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cbfg.rvadapter.RVAdapter
 import cbfg.rvadapter.demo.R
+import cbfg.rvadapter.demo.databinding.FragmentDragBinding
 import cbfg.rvadapter.entity.RankItem
-import kotlinx.android.synthetic.main.fragment_drag.*
 
 class DragFragment : Fragment(R.layout.fragment_drag), View.OnClickListener {
+    private var _binding: FragmentDragBinding? = null
+    private val binding: FragmentDragBinding
+        get() = _binding!!
+
     private lateinit var adapter: RVAdapter<RankItem>
     private lateinit var dragHelper: DragHelper
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentDragBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = RVAdapter<RankItem>(view.context, DragVHFactory())
-            .bind(rvTest)
+            .bind(binding.rvTest)
             .setItems(getItems())
 
         dragHelper = DragHelper(adapter)
-        dragHelper.bindRecyclerView(rvTest)
+        dragHelper.bindRecyclerView(binding.rvTest)
         dragHelper.setDragBgRes(0, R.color.lightGray)
 
-        btnLinear.setOnClickListener(this)
-        btnGrid.setOnClickListener(this)
-        btnEnableDrag.setOnClickListener(this)
-        btnDisableDrag.setOnClickListener(this)
-        btnNotify.setOnClickListener(this)
+        binding.btnLinear.setOnClickListener(this)
+        binding.btnGrid.setOnClickListener(this)
+        binding.btnEnableDrag.setOnClickListener(this)
+        binding.btnDisableDrag.setOnClickListener(this)
+        binding.btnNotify.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -45,12 +60,12 @@ class DragFragment : Fragment(R.layout.fragment_drag), View.OnClickListener {
                 adapter.notifyDataSetChanged()
             }
             R.id.btnLinear -> {
-                rvTest.layoutManager = LinearLayoutManager(context)
+                binding.rvTest.layoutManager = LinearLayoutManager(context)
             }
             R.id.btnGrid -> {
                 val gridManager = GridLayoutManager(context, RecyclerView.VERTICAL)
                 gridManager.spanCount = 3
-                rvTest.layoutManager = gridManager
+                binding.rvTest.layoutManager = gridManager
             }
         }
     }
@@ -61,5 +76,10 @@ class DragFragment : Fragment(R.layout.fragment_drag), View.OnClickListener {
             items.add(RankItem(i, i))
         }
         return items
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

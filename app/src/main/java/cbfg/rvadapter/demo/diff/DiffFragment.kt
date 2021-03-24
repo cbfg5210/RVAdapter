@@ -1,26 +1,41 @@
 package cbfg.rvadapter.demo.diff
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import cbfg.rvadapter.DiffHelper
 import cbfg.rvadapter.RVAdapter
 import cbfg.rvadapter.demo.R
+import cbfg.rvadapter.demo.databinding.FragmentDiffBinding
 import cbfg.rvadapter.entity.RankItem
 import cbfg.rvadapter.util.AppExecutors
-import kotlinx.android.synthetic.main.fragment_diff.*
 
-class DiffFragment : Fragment(R.layout.fragment_diff), View.OnClickListener {
+class DiffFragment : Fragment(), View.OnClickListener {
+    private var _binding: FragmentDiffBinding? = null
+    private val binding: FragmentDiffBinding
+        get() = _binding!!
+
     private var idCount: Int = 3
     private lateinit var adapter: RVAdapter<RankItem>
     private lateinit var diffHelper: DiffHelper<RankItem>
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentDiffBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = RVAdapter<RankItem>(view.context, DiffVHFactory())
-            .bind(rvTest)
+            .bind(binding.rvTest)
             .setItems(getItems())
 
         diffHelper = DiffHelper(adapter, object : DiffHelper.BDiffCallback<RankItem> {
@@ -31,10 +46,10 @@ class DiffFragment : Fragment(R.layout.fragment_diff), View.OnClickListener {
             }
         })
 
-        btnTopAdd.setOnClickListener(this)
-        btnTopRemove.setOnClickListener(this)
-        btnUpdateAll.setOnClickListener(this)
-        btnShuffle.setOnClickListener(this)
+        binding.btnTopAdd.setOnClickListener(this)
+        binding.btnTopRemove.setOnClickListener(this)
+        binding.btnUpdateAll.setOnClickListener(this)
+        binding.btnShuffle.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -105,5 +120,10 @@ class DiffFragment : Fragment(R.layout.fragment_diff), View.OnClickListener {
             items.add(RankItem(i, i))
         }
         return items
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
