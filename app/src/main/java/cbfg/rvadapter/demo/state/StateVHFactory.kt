@@ -15,7 +15,7 @@ import cbfg.rvadapter.demo.databinding.LayoutStateLoadingBinding
  * 功能描述: 状态页管理
  */
 class StateVHFactory : RVHolderFactory() {
-    override fun getItemViewType(item: Any): Int {
+    override fun getItemViewType(position: Int, item: Any): Int {
         item as RVState
         return when (item.state) {
             RVState.State.LOADING -> R.layout.layout_state_loading

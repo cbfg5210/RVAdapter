@@ -24,7 +24,7 @@ abstract class RVHolderFactory {
      * 如果默认的不满足需求，可以覆写这个方法，
      * 建议使用 item layout 作为 type 值
      */
-    open fun getItemViewType(item: Any) = -1
+    open fun getItemViewType(position: Int, item: Any) = -1
 
     /**
      * 供 [RecyclerView.Adapter.onCreateViewHolder] 调用，

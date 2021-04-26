@@ -431,11 +431,16 @@ class RVAdapter<T : Any>(
 
     override fun getItemViewType(position: Int): Int {
         if (items.isEmpty()) {
-            (normalState ?: emptyState)?.run { return stateHolderFactory.getItemViewType(this) }
+            (normalState ?: emptyState)?.run {
+                return stateHolderFactory.getItemViewType(
+                    position,
+                    this
+                )
+            }
         }
         tempPosition = position
         val item = items[position]
-        val viewType = rvHolderFactory.getItemViewType(item)
+        val viewType = rvHolderFactory.getItemViewType(position, item)
         return if (viewType != -1) viewType else getItemInfo(item.javaClass).viewType
     }
 
