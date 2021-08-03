@@ -223,18 +223,35 @@ class RVAdapter<T : Any>(
         notifyItemRangeInserted(index, list.size)
     }
 
-    fun remove(item: T) {
+    fun remove(item: T, shouldNotify: Boolean = true) {
         selections.remove(item)
         val index = items.indexOf(item)
-        if (index != -1) {
-            items.remove(item)
+        if (index == -1) {
+            return
+        }
+        items.remove(item)
+        if (shouldNotify) {
             notifyItemRemoved(index)
         }
     }
 
-    fun removeAt(index: Int) {
+    fun removeAt(index: Int, shouldNotify: Boolean = true) {
         selections.remove(items.removeAt(index))
-        notifyItemRemoved(index)
+        if (shouldNotify) {
+            notifyItemRemoved(index)
+        }
+    }
+
+    fun replaceAt(index: Int, newOne: T, shouldNotify: Boolean = true) {
+        val oldOne = items.removeAt(index)
+        items.add(index, newOne)
+        if (selections.contains(oldOne)) {
+            selections.remove(oldOne)
+            selections.add(newOne)
+        }
+        if (shouldNotify) {
+            notifyItemChanged(index, FLAG_ITEM_CHANGED)
+        }
     }
 
     fun removeList(list: Collection<T>) {
@@ -593,5 +610,6 @@ class RVAdapter<T : Any>(
         const val FLAG_DESELECTED = 10102
         const val FLAG_SELECTABLE = 10103
         const val FLAG_UNSELECTABLE = 10104
+        const val FLAG_ITEM_CHANGED = 10105
     }
 }
