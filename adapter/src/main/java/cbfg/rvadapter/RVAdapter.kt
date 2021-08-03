@@ -467,11 +467,11 @@ class RVAdapter<T : Any>(
                 val holder = stateHolderFactory.createViewHolder(parent, viewType, this)
                 holder.setListeners(
                     stateClickListener?.run {
-                        View.OnClickListener { this(it, state, holder.adapterPosition) }
+                        View.OnClickListener { this(it, state, holder.bindingAdapterPosition) }
                     },
                     stateLongClickListener?.run {
                         View.OnLongClickListener {
-                            this(it, state, holder.adapterPosition)
+                            this(it, state, holder.bindingAdapterPosition)
                             true
                         }
                     }
@@ -497,7 +497,7 @@ class RVAdapter<T : Any>(
         view: View,
         clicker: ((view: View, item: T, position: Int) -> Unit)?
     ) {
-        val position = holder.adapterPosition
+        val position = holder.bindingAdapterPosition
         if (position in 0 until items.size) {
             clicker?.invoke(view, items[position], position)
         }
